@@ -1,12 +1,11 @@
 import Model from './Model';
+import defaultEffects from './defaultEffects';
 
 const models = {};
 
 function checkDispatch(props) {
   if (typeof props === 'object') {
     const { dispatch, modelStatus, namespace } = props;
-    return getModel(namespace);
-
     if (dispatch && typeof dispatch === 'function') {
       return [
         modelStatus,
@@ -20,14 +19,29 @@ function checkDispatch(props) {
 
 function getModel(namespace) {
   if (!models[namespace]) {
-    createModel(namespace);
+    createModel({ namespace });
+    console.log('auto create model: ', namespace, models);
   }
   return models[namespace].useModel();
 }
 
-function createModel(namespace) {
-  models[namespace] = new Model(namespace);
-  console.log('auto create model',namespace, models);
+function createModel({ namespace, reducers = {}, effects = {} }) {
+  models[namespace] = new Model({
+    namespace,
+    reducers: {
+      save({ payload }, { state }) {
+        return {
+          ...state,
+          ...payload
+        }
+      },
+      ...reducers,
+    },
+    effects: {
+      ...defaultEffects,
+      ...effects,
+    },
+  });
 }
 
 function removeModel(namespace) {

@@ -8,7 +8,7 @@ export default (props) => {
     TestTestTest
     name: {modelStatus.name}
     <button onClick={() => dispatch({
-      type: 'test',
+      type: 'fetchList',
       payload: {
         demo: 123456
       }
@@ -16,7 +16,7 @@ export default (props) => {
     <button onClick={() => dispatch({
       type: 'save',
       payload: {
-        demo: 123456
+        name: 123456
       }
     })}>Click save</button>
   </div>

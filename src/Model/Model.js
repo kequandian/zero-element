@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-const sleep = ms => new Promise(res => setTimeout(_ => res(), ms));
 const isPromise = func => {
   if (func instanceof Promise) return true;
   if (typeof func === 'object' && typeof func.then === 'function') return true;
@@ -8,24 +7,16 @@ const isPromise = func => {
 }
 
 export default class Model {
-  constructor(config) {
-    this.state = {}
+  constructor({ namespace, reducers = {}, effects = {} }) {
+    this.state = {
+      name: 'xiao zhang',
+    }
     this.queue = [];
-    this.reducers = {
-      save() {
-        return {
-          name: 'XiaoMing',
-        }
-      }
-    };
-    this.effects = {
-      async test(payload, { state }) {
-        console.log(111111, payload, state);
-        await sleep(1000);
-        console.log('ok!');
-      }
-    };
-    this.namespace = '';
+    // { demo: _=> {} }
+    this.reducers = reducers;
+    // { async demo: ({payload}, { state, put }) => await put({type,payload}) }
+    this.effects = effects;
+    this.namespace = namespace;
   }
   useModel() {
     const [, setState] = useState();
@@ -43,12 +34,13 @@ export default class Model {
   getState() {
     return this.state;
   }
-  dispatch({ type, payload }) {
+  dispatch(data) {
+    const { type } = data;
     const action = this.reducers[type] || this.effects[type];
     if (action) {
-      const rst = action(payload, {
+      const rst = action(data, {
         state: this.getState(),
-        // put: this.dispatch,
+        put: this.dispatch.bind(this),
       });
       if (isPromise(rst)) {
         // rst.then();
