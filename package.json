@@ -10,11 +10,14 @@
   "dependencies": {
     "@material-ui/core": "^4.0.0-beta.1",
     "@material-ui/icons": "^4.0.0-beta.0",
+    "axios": "^0.18.0",
     "lodash": "^4.17.4",
+    "mui-tables": "^2.0.4",
     "numeral": "^2.0.6",
     "qs": "^6.5.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-loadable": "^5.5.0",
     "url-polyfill": "^1.0.10"
   },
   "devDependencies": {
@@ -28,6 +31,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-plugin-dva-hmr": "^0.4.1",
     "babel-plugin-import": "^1.11.0",
+    "babel-plugin-module-resolver": "^3.2.0",
     "cross-env": "^5.1.1",
     "cross-port-killer": "^1.0.1",
     "eslint-plugin-react-hooks": "^1.6.0",

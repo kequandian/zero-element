@@ -1,23 +1,19 @@
-import React from 'react';
-import { useModel } from './Model';
+import Zele from '@/ZEle';
 
-export default (props) => {
-  const [modelStatus, dispatch] = useModel(props);
-  
-  return <div>
-    TestTestTest
-    name: {modelStatus.name}
-    <button onClick={() => dispatch({
-      type: 'fetchList',
-      payload: {
-        demo: 123456
-      }
-    })}>Click test</button>
-    <button onClick={() => dispatch({
-      type: 'save',
-      payload: {
-        name: 123456
-      }
-    })}>Click save</button>
-  </div>
-}
+import { set } from '@/global/baseComponents';
+import BaseList from '@/container/list/BaseList';
+
+import { set as APIConfig } from '@/global/APIConfig';
+
+set({
+  BaseList,
+});
+
+APIConfig({
+  'FIELD_current': 'current',
+  'FIELD_pageSize': 'pageSize',
+  'FIELD_total': 'total',
+  'FIELD_PID': 'pid',
+});
+
+export default Zele;

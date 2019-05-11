@@ -1,0 +1,93 @@
+.Reader-Layout-FormDefault{
+  width: 100%;
+  margin: 0;
+  /* min-height: 80px; */
+  padding: 0 12px;
+}
+.Reader-Layout-FormDefault div.ant-form-item{
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.Reader-Layout-FormDefault div.ant-form-item-control-wrapper,
+.Reader-Layout-SearchDefault div.ant-form-item-control-wrapper{
+  min-width: 210px;
+  /* min-height: 52px; */
+}
+.Reader-Layout-FormDefault div.ant-radio-group-outline,
+.Reader-Layout-FormDefault div.ant-checkbox-group{
+  line-height: 30px;
+}
+.Reader-Layout-FormDefault span.ant-calendar-picker-input,
+.Reader-Layout-SearchDefault span.ant-calendar-picker-input{
+  width: 210px;
+}
+
+.Reader-Layout-Exclusive{
+  width: 100%;
+  margin: 0 auto;
+  min-height: 60px;
+  display: flex;
+  justify-content: flex-end;
+}
+.Reader-Layout-Exclusive div.ant-form-item{
+  display: flex;
+  flex: 1;
+  margin-right: 0;
+}
+.Reader-Layout-Exclusive div.ant-form-item-label{
+  width: 25%;
+  text-align: right;
+  padding: 0 8px 0 0;
+  line-height: 32px;
+}
+.Reader-Layout-Exclusive div.ant-form-item-control-wrapper{
+  flex: 1;
+}
+
+.Reader-Layout-FormInline .ant-form-item{
+  display: flex;
+  padding: 0;
+  height: 40px;
+}
+.Reader-Layout-FormInline .ant-form-item-label{
+  flex: 1;
+  text-align: right;
+  padding: 0;
+  margin-right: .5em;
+  line-height: 40px;
+  max-width: 10em;
+}
+.Reader-Layout-FormInline .ant-form-item-label::after{
+  content: ':';
+  display: inline-block;
+  width: .5em;
+  height: 1em;
+}
+.Reader-Layout-FormInline .ant-form-item-control-wrapper{
+  width: 210px;
+}
+.Reader-Layout-FormInline .ant-form-item-control{
+  line-height: 40px;
+}
+
+.Reader-Layout-SearchDefault{
+  display: flex;
+  transition: all .2s;
+  overflow: hidden;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.Reader-Layout-SearchDefault .ant-form-item{
+  display: flex;
+  margin: 0;
+}
+.Reader-Layout-SearchDefault .ant-form-item-label{
+  width: 7em;
+}
+.Reader-Layout-SearchDefault .ant-form-item-control-wrapper{
+  flex: 1;
+}
+
+.Reader-Layout-SearchDefault .ant-select-enabled{
+  width: 100%;
+}

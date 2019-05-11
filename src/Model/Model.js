@@ -7,10 +7,8 @@ const isPromise = func => {
 }
 
 export default class Model {
-  constructor({ namespace, reducers = {}, effects = {} }) {
-    this.state = {
-      name: 'xiao zhang',
-    }
+  constructor({ namespace, state = {}, reducers = {}, effects = {} }) {
+    this.state = state;
     this.queue = [];
     // { demo: _=> {} }
     this.reducers = reducers;
