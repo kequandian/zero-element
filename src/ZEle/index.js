@@ -1,19 +1,23 @@
-import React from 'react';
-import { useModel } from '@/Model';
-import { useDidMount } from '@/utils/hooks/lifeCycle';
+import React, { useState } from 'react';
+import PageContext from '@/context/PageContext';
+import { useDidMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
+import { useDataPool, removeDataPool } from '@/DataPool';
 import Reader from '@/Reader';
 
+const { Provider } = PageContext;
 
 export default function ZEle(props) {
-  const [modelStatus, dispatch] = useModel(props);
+  const { namespace } = props;
+  const [pageState, setPageState] = useState({
+    namespace,
+  });
+  useWillUnmount(() => {
+    removeDataPool(namespace);
+  });
 
-  // const pageItemProps = {
-  //   onChangePageTitle: handleChangePageTitle,
-  // }
-
-  return <div>
+  return <Provider value={pageState}>
     <Reader
       {...props}
     />
-  </div>
+  </Provider>
 }

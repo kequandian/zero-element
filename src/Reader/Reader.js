@@ -1,16 +1,19 @@
-import React, { Component } from 'react';
-import { getMainLayout, getItem } from './utils/readConfig';
+import React from 'react';
+import { UseLayout, UseItem } from './utils/readConfig';
 
 
-export default class Reader extends Component {
+export default function Reader(props) {
+  const { namespace, config = {}, ...restProps } = props;
 
-  render() {
-    const { config = {}, ...restProps } = this.props;
-    const MainLayout = getMainLayout(config.layout);
-    return (
-      <MainLayout key="mainLayout" {...(config.config || {})}>
-        {config.items && config.items.map((itemCfg, index) => getItem(itemCfg, index, restProps))}
-      </MainLayout>
-    );
-  }
+  return (
+    <UseLayout n={config.layout} {...(config.config || {})}>
+      {config.items && config.items.map((itemCfg, i) =>
+        <UseItem key={i}
+          config={itemCfg}
+          namespace={itemCfg.namespace || namespace}
+          {...restProps}
+        />
+      )}
+    </UseLayout>
+  );
 }

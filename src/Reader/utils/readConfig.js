@@ -24,6 +24,29 @@ export function getMainLayout(layoutName) {
   }.bind(null, layoutName);
 }
 
+export function UseLayout(props) {
+  const { n, ...restProps } = props;
+  const layoutMap = {
+    ...LayoutSet,
+    ...extendsLayout,
+  };
+  const Layout = layoutMap[n];
+
+  if (Layout) {
+    return <Layout {...restProps} />;
+  }
+  return <div>未定义的 Layout: {String(n)}</div>;
+}
+
+export function UseItem(props) {
+  const { config } = props;
+  const { component } = config;
+
+  return <BaseEnter {...config}>
+    <Render n={component} {...props} />
+  </BaseEnter>
+}
+
 export function getItem(itemConfig, index, props) {
   const { PREVENTRENDER = false, component, ...restConfig } = itemConfig;
 

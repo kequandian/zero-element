@@ -1,6 +1,3 @@
-.Reader-display-none{
-  display: none;
-}
 .Reader-TextArea-box{
   position: relative;
 }
@@ -14,6 +11,9 @@
 .Reader-Group{
   font-size: 24px;
   font-weight: bold;
+}
+.Reader-display-none{
+  display: none;
 }
 .Reader-Layout-FormDefault{
   width: 100%;

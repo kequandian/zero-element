@@ -2,7 +2,7 @@ import { query, post, update, remove } from '@/utils/request';
 // const sleep = ms => new Promise(res => setTimeout(_ => res(), ms));
 
 async function fetchList({ API, payload, DIRECTRETURN = false, MODELPATH = 'listData' }, { put }) {
-  console.log("fetchList to :", API, payload);
+  console.log("fetchList to :", API, MODELPATH);
 
   const { data: result } = await query(API, payload);
   if (result && result.code === 200) {

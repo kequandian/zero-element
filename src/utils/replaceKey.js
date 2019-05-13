@@ -1,15 +1,15 @@
 /**
- *  API 参数的具体实现
- * @param {object} dataPool 数据池
- * - [id] 从 dataPool.getToLocation 中替换 id 的值
- * - (id) 从 dataPool.getToRecord 中替换 id 的值
- * - {id} 从 dataPool.getToForm 中替换 id 的值
+ *  API 参数化的具体实现
+ * @param {object} {modelStatus, dataPool} model state 和 dataPool
+ * - [id] 从 dataPool.location 中替换 id 的值
+ * - (id) 从 dataPool.record 中替换 id 的值
+ * - {id} 从 modelStatus 中替换 id 的值
  */
-export default function replaceKey(dataPool) {
+export default function replaceKey({ modelStatus, dataPool }) {
   return {
     format: function format(string) {
       if (!string) {
-        if(string === undefined) {
+        if (string === undefined) {
           console.error('API 未定义');
           return {};
         };
@@ -20,13 +20,17 @@ export default function replaceKey(dataPool) {
 
         keyList && keyList.forEach(key => {
           if (key.indexOf('[') > -1) {
-            string = string.replace(key, dataPool.getToLocation(key.replace(/\[|\]/g, '')));
+            string = string.replace(key,
+              dataPool.location[key.replace(/\[|\]/g, '')]
+            );
           } else if (key.indexOf('(') > -1) {
-            string = string.replace(key, dataPool.getToRecord(key.replace(/\(|\)/g, '')));
+            string = string.replace(key,
+              dataPool.record[key.replace(/\(|\)/g, '')]
+            );
           } else if (key.indexOf('{') > -1) {
             string = string.replace(key,
-              dataPool.getToFormAll()[key.replace(/\{|\}/g, '')]
-              );
+              modelStatus.formData[key.replace(/\{|\}/g, '')]
+            );
           }
         });
 

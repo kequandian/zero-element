@@ -3,9 +3,9 @@ import defaultEffects from './defaultEffects';
 
 const models = {};
 
-function checkDispatch(props) {
-  if (typeof props === 'object') {
-    const { dispatch, modelStatus, namespace } = props;
+function checkDispatch(options) {
+  if (typeof options === 'object') {
+    const { dispatch, modelStatus, namespace } = options;
     if (dispatch && typeof dispatch === 'function') {
       return [
         modelStatus,

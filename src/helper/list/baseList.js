@@ -1,19 +1,25 @@
 import { useModel } from '@/Model';
+import useAPI from '@/utils/hooks/useAPI';
 
-import { set } from '@/utils/request/endpoint';
-
-export default function (namespace) {
+export default function ({ namespace, modelPath }, config) {
+  const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,
   });
   const { listData = {} } = modelStatus;
   const { records = [] } = listData;
+  const formatAPI = useAPI(API, {
+    namespace,
+  });
   function getList() {
-    set('http://127.0.0.1:8080');
-    dispatch({
-      type: 'fetchList',
-      API: '/api/generate/sql',
-    });
+    const api = formatAPI.listAPI;
+    if (formatAPI) {
+      dispatch({
+        type: 'fetchList',
+        API: api,
+        MODELPATH: modelPath,
+      });
+    }
   }
   return {
     data: records,

@@ -41,8 +41,9 @@ export default class Model {
         put: this.dispatch.bind(this),
       });
       if (isPromise(rst)) {
-        // rst.then();
+        // effects
       } else {
+        // reducers
         this.state = {
           ...this.getState(),
           ...rst,
@@ -50,6 +51,8 @@ export default class Model {
         // 触发 state 更新
         this.queue.forEach(setState => setState(this.state));
       }
+    } else {
+      console.warn(`未定义的方法: ${action}`);
     }
   }
 }
