@@ -1,6 +1,6 @@
 export default {
   body: {
-    noMatch: '未找到匹配数据',
+    noMatch: '未找到数据',
     toolTip: '排序',
     summary: '总计'
   },

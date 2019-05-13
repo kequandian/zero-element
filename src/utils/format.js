@@ -1,5 +1,4 @@
 import React from 'react';
-import { Spin } from 'antd';
 import { ListOperation, ListFieldsEdit } from '../components/BaseElement';
 import { valueTypeRender } from './valueTypeRender';
 
@@ -17,7 +16,7 @@ export function formatTableFields(fields = [], operation = [], NOTREGISTER = fal
   const rst = fields.map((fieldCfg, i) => {
     const { field, label,
       valueType,
-      render = i === 0 ? renderLoading : valueTypeRender(valueType, fieldCfg),
+      render = valueTypeRender(valueType, fieldCfg),
       ...rest
     } = fieldCfg;
 
@@ -53,9 +52,4 @@ export function formatTableFields(fields = [], operation = [], NOTREGISTER = fal
     });
   }
   return rst;
-}
-const renderLoading = (text, record) => {
-  return record.loading === true ?
-    <Spin style={{ marginRight: '1em' }} />
-    : text
 }

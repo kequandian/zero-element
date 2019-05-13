@@ -1,4 +1,5 @@
 import { query, post, update, remove } from '@/utils/request';
+import { get } from '@/global/APIConfig';
 // const sleep = ms => new Promise(res => setTimeout(_ => res(), ms));
 
 async function fetchList({ API, payload, DIRECTRETURN = false, MODELPATH = 'listData' }, { put }) {
@@ -20,14 +21,16 @@ async function fetchList({ API, payload, DIRECTRETURN = false, MODELPATH = 'list
         }
       })
     } else {
-      const { records, size: pageSize, ...rest } = result.data;
+      const data = result.data;
       await put({
         type: 'save',
         payload: {
           [MODELPATH]: {
-            ...rest,
-            pageSize,
-            records,
+            ...data,
+            current: data[get('FIELD_current')],
+            pageSize: data[get('FIELD_pageSize')],
+            total: data[get('FIELD_total')],
+            records: data[get('FIELD_records')],
           },
         }
       })
@@ -40,11 +43,21 @@ async function fetchList({ API, payload, DIRECTRETURN = false, MODELPATH = 'list
       }
     })
   }
-  return result;
 
+  return result;
+}
+
+async function deleteOne({ API, payload }) {
+  console.log("deleteOne to :", API);
+  const { data: result } = await query(API, payload);
+  if (result && result.code === 200) {
+    console.log('删除成功');
+  }
+  return result;
 }
 
 const effects = {
   fetchList,
+  deleteOne,
 };
 export default effects;

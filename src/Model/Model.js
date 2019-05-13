@@ -42,6 +42,7 @@ export default class Model {
       });
       if (isPromise(rst)) {
         // effects
+        return rst;
       } else {
         // reducers
         this.state = {

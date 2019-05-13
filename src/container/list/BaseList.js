@@ -9,10 +9,10 @@ export default function BaseList(props) {
     modelPath: 'listData',
   }, config);
 
-  const { getList } = listProps;
+  const { onGetList, onDelete } = listProps;
   useEffect(_ => {
-    getList();
+    onGetList({});
   }, []);
-  
+
   return <Table {...listProps} />
 }

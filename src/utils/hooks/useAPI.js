@@ -15,7 +15,11 @@ export default function useAPI(API, { namespace }) {
   }
   return new Proxy(API, {
     get(target, name) {
-      return APIUtils.format(target[name]);
+      if (target[name]) {
+        return APIUtils.format(target[name]);
+      } else {
+        return null;
+      }
     }
   });
 }
