@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PageContext from '@/context/PageContext';
-import { useDidMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
+import { useWillMount, useDidMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
 import { useDataPool, removeDataPool } from '@/DataPool';
 import Reader from '@/Reader';
 
@@ -11,6 +11,7 @@ export default function ZEle(props) {
   const [pageState, setPageState] = useState({
     namespace,
   });
+  useWillMount();
   useWillUnmount(() => {
     removeDataPool(namespace);
   });

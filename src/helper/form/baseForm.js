@@ -1,7 +1,5 @@
 import { useModel } from '@/Model';
 import useAPI from '@/utils/hooks/useAPI';
-import { get } from '@/global/APIConfig';
-import { useDataPool } from '@/DataPool';
 
 export default function baseForm({ namespace, modelPath = 'formData' }, config) {
   const { API = {} } = config;

@@ -15,10 +15,10 @@ export default function useAPI(API, { namespace }) {
   }
   return new Proxy(API, {
     get(target, name) {
-      if (target[name]) {
+      if (target[name] !== undefined) {
         return APIUtils.format(target[name]);
       } else {
-        console.warn(`API ${key} is undefined, check your config file`);
+        console.warn(`API ${name} is undefined, check your config file`);
         return null;
       }
     }

@@ -4,6 +4,7 @@ import loader from '../utils/loader';
 
 const elementsSet = {
   'Loading': () => <div>Loading……</div>,
+  'PermRej': () => <div>403</div>,
 };
 
 function set(NodeObj) {
