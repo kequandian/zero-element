@@ -1,9 +1,9 @@
 import { useModel } from '@/Model';
 import useAPI from '@/utils/hooks/useAPI';
-import { get } from '@/global/APIConfig';
+import { get } from 'zero-element-global/lib/APIConfig';
 import { useDataPool } from '@/DataPool';
 
-export default function baseList({ namespace, modelPath = 'listData' }, config) {
+export default function useBaseList({ namespace, modelPath = 'listData' }, config) {
   const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,

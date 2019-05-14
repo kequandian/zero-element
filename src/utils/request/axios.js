@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { get } from '@/global/APIConfig';
-const { endpoint } = get();
+import { get } from 'zero-element-global/lib/APIConfig';
 
 const instance = axios.create({
-  baseURL: endpoint,
+  baseURL: get('endpoint'),
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',

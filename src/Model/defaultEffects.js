@@ -1,5 +1,5 @@
 import { query, post, update, remove } from '@/utils/request';
-import { get } from '@/global/APIConfig';
+import { get } from 'zero-element-global/lib/APIConfig';
 // const sleep = ms => new Promise(res => setTimeout(_ => res(), ms));
 
 async function fetchList({ API, payload, DIRECTRETURN, MODELPATH }, { put }) {

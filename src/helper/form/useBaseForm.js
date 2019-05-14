@@ -1,7 +1,7 @@
 import { useModel } from '@/Model';
 import useAPI from '@/utils/hooks/useAPI';
 
-export default function baseForm({ namespace, modelPath = 'formData' }, config) {
+export default function useBaseForm({ namespace, modelPath = 'formData' }, config) {
   const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,

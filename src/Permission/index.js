@@ -1,6 +1,6 @@
 import React from 'react';
 import Permission from './Permission';
-import { Render } from '@/global/elements';
+import { Render } from 'zero-element-global/lib/elements';
 
 const permPools = {};
 

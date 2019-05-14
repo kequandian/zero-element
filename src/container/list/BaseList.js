@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
-import baseList from '@/helper/list/baseList';
+import useBaseList from '@/helper/list/useBaseList';
 import Table from '@/components/Table';
 
 export default function BaseList(props) {
   const { namespace, config } = props;
-  const listProps = baseList({
+  const listProps = useBaseList({
     namespace,
     modelPath: 'listData',
   }, config);
