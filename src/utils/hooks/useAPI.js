@@ -18,6 +18,7 @@ export default function useAPI(API, { namespace }) {
       if (target[name]) {
         return APIUtils.format(target[name]);
       } else {
+        console.warn(`API ${key} is undefined, check your config file`);
         return null;
       }
     }

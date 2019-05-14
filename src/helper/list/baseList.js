@@ -3,14 +3,14 @@ import useAPI from '@/utils/hooks/useAPI';
 import { get } from '@/global/APIConfig';
 import { useDataPool } from '@/DataPool';
 
-export default function ({ namespace, modelPath }, config) {
+export default function baseList({ namespace, modelPath = 'listData' }, config) {
   const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,
   });
   const [, { setRecord }] = useDataPool({ namespace });
 
-  const { listData = {} } = modelStatus;
+  const listData = modelStatus[modelPath];
   const { current, pageSize, records = [] } = listData;
   const formatAPI = useAPI(API, {
     namespace,
@@ -27,6 +27,7 @@ export default function ({ namespace, modelPath }, config) {
         type: 'fetchList',
         API: api,
         MODELPATH: modelPath,
+        DIRECTRETURN: false,
         payload: {
           ...queryData,
           current,

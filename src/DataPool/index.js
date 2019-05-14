@@ -2,7 +2,7 @@ import DataPool from './DataPool';
 
 const pools = {};
 
-function checkDispatch(options) {
+function useDataPool(options) {
   if (typeof options === 'object') {
     const { namespace } = options;
     return getDataPool(namespace);
@@ -25,7 +25,7 @@ function removeDataPool(namespace) {
 }
 
 export {
-  checkDispatch as useDataPool,
+  useDataPool,
   createDataPool,
   removeDataPool,
 }

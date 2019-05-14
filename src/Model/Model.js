@@ -7,7 +7,7 @@ const isPromise = func => {
 }
 
 export default class Model {
-  constructor({ namespace, state = {}, reducers = {}, effects = {} }) {
+  constructor({ namespace, state = {}, reducers = {}, effects = {}, auto }) {
     this.state = state;
     this.queue = [];
     // { demo: _=> {} }
@@ -15,6 +15,7 @@ export default class Model {
     // { async demo: ({payload}, { state, put }) => await put({type,payload}) }
     this.effects = effects;
     this.namespace = namespace;
+    this.auto = auto;
   }
   useModel() {
     const [, setState] = useState();

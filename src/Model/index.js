@@ -19,15 +19,19 @@ function checkDispatch(options) {
 
 function getModel(namespace) {
   if (!models[namespace]) {
-    createModel({ namespace });
+    createModel({ namespace, auto: true });
     console.log('auto create model: ', namespace, models);
   }
   return models[namespace].useModel();
 }
 
-function createModel({ namespace, reducers = {}, effects = {} }) {
+function createModel({ namespace, reducers = {}, effects = {}, auto = false }) {
   models[namespace] = new Model({
     namespace,
+    state: {
+      listData: {},
+      formData: {},
+    },
     reducers: {
       save({ payload }, { state }) {
         return {
@@ -41,6 +45,7 @@ function createModel({ namespace, reducers = {}, effects = {} }) {
       ...defaultEffects,
       ...effects,
     },
+    auto,
   });
 }
 
