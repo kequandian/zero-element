@@ -5,7 +5,7 @@
  * @export
  * @param {Function} func 执行的函数
  */
-declare function useWillMount(func: Function)
+declare function useWillMount(func: Function): void
 
 /**
  * 在组件已挂载时调用一次函数
@@ -13,7 +13,7 @@ declare function useWillMount(func: Function)
  * @export
  * @param {Function} func 执行的函数
  */
-declare function useDidMount(func: Function)
+declare function useDidMount(func: Function): void
 
 /**
  * 在组件将要卸载时调用一次函数
@@ -21,7 +21,7 @@ declare function useDidMount(func: Function)
  * @export
  * @param {Function} func 执行的函数
  */
-declare function useWillUnmount(func: Function)
+declare function useWillUnmount(func: Function): void
 
 
 export {

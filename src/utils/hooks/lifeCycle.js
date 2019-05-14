@@ -10,7 +10,7 @@ function useWillMount(func) {
   useMemo(() => void func(), []);
 }
 function useDidMount(func) {
-  useEffect(() => void fn(), []);
+  useEffect(() => void func(), []);
 }
 
 function useWillUnmount(func) {

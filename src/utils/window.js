@@ -6,6 +6,13 @@ const handler = {
     } else {
       return _ => void 0;
     }
+  },
+  set: function (obj, prop, value) {
+    if (checkEnv()) {
+      return window[prop] = value;
+    } else {
+      return _ => void 0;
+    }
   }
 };
 

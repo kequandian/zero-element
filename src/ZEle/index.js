@@ -11,7 +11,6 @@ export default function ZEle(props) {
   const [pageState, setPageState] = useState({
     namespace,
   });
-  useWillMount();
   useWillUnmount(() => {
     removeDataPool(namespace);
   });
