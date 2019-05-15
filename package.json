@@ -8,11 +8,8 @@
     "build": "npm run clean && gulp"
   },
   "dependencies": {
-    "@material-ui/core": "^4.0.0-beta.1",
-    "@material-ui/icons": "^4.0.0-beta.0",
     "axios": "^0.18.0",
     "lodash": "^4.17.4",
-    "mui-tables": "^2.0.4",
     "numeral": "^2.0.6",
     "qs": "^6.5.0",
     "rc-queue-anim": "^1.6.12",
