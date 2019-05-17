@@ -1,26 +1,24 @@
-import React, { Component } from 'react';
-import QueueAnim from 'rc-queue-anim';
-import './index.css';
+import React, { useState } from 'react';
+import { Motion, spring, presets } from 'react-motion';
+import { useDidMount } from '@/utils/hooks/lifeCycle';
 
-export default class BaseEnter extends Component {
-  render() {
-    const { children, ...restProps } = this.props;
+export default function BaseEnter({ children }) {
+  const [offsetY, setOffsetY] = useState(20);
+  useDidMount(_ => {
+    setOffsetY(0);
+  });
 
-    return <QueueAnim
-      interval={0}
-      animConfig={[
-        { opacity: [1, 0], translateY: [0, 40] },
-      ]}
-      animatingClassName={
-        ['queue-anim-entering', 'Reader-display-none']
+  return <Motion style={{ x: spring(offsetY, presets.noWobble) }}>
+    {interpolatingStyle => {
+      const style = {};
+      if (interpolatingStyle.x !== 0) {
+        style.transform = `translateY(${interpolatingStyle.x}px)`
       }
-    >
-      {React.Children.map(children, (child) => {
-        return React.cloneElement(child, {
-          key: 'content',
-          ...restProps,
-        });
-      })}
-    </QueueAnim>
-  }
+      return (
+        <div style={style}>
+          {children}
+        </div>
+      )
+    }}
+  </Motion>
 }
