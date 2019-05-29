@@ -6,7 +6,6 @@ import { Render as RenderLayout } from 'zero-element-global/lib/layout';
 
 export function UseLayout(props) {
   const { n, ...restProps } = props;
-  console.log(333, props);
 
   return <RenderLayout n={n} {...restProps} />;
 }

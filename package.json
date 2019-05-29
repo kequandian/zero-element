@@ -16,7 +16,7 @@
     "react-dom": "^16.8.6",
     "react-motion": "^0.5.2",
     "url-polyfill": "^1.0.10",
-    "zero-element-global": "kequandian/zero-element-global"
+    "zero-element-global": "github:kequandian/zero-element-global"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
