@@ -1,6 +1,6 @@
 
 /**
- * 使用 DataPool
+ * 获取 dataPool 的实例
  *
  * @param {String} namespace 命名空间, 一般与 model namespace 相同
  * @return {DataPool} DataPool 实例

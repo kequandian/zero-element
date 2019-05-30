@@ -1,5 +1,5 @@
 import { useModel } from '@/Model';
-import useAPI from '@/utils/hooks/useAPI';
+import { formatAPI } from '@/utils/format';
 
 export default function useBaseForm({ namespace, modelPath = 'formData' }, config) {
   const { API = {} } = config;
@@ -8,12 +8,12 @@ export default function useBaseForm({ namespace, modelPath = 'formData' }, confi
   });
 
   const formData = modelStatus[modelPath];
-  const formatAPI = useAPI(API, {
+  const fAPI = formatAPI(API, {
     namespace,
   });
 
   function onGetOne({ }) {
-    const api = formatAPI.getAPI;
+    const api = fAPI.getAPI;
     if (api)
       dispatch({
         type: 'fetchOne',
@@ -29,7 +29,7 @@ export default function useBaseForm({ namespace, modelPath = 'formData' }, confi
   }
 
   function onCreateForm({ fields }) {
-    const api = formatAPI.createAPI;
+    const api = fAPI.createAPI;
 
     if (api) {
       dispatch({

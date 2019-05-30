@@ -34,6 +34,9 @@ export default class Model {
   getState() {
     return this.state;
   }
+  getModel() {
+    return this;
+  }
   dispatch(data) {
     const { type } = data;
     const action = this.reducers[type] || this.effects[type];

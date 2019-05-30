@@ -2,7 +2,7 @@ import DataPool from './DataPool';
 
 const pools = {};
 
-function getDataPool(namespace) {
+function getDataPoolEntity(namespace) {
   if (!pools[namespace]) {
     createDataPool({ namespace });
   }
@@ -18,7 +18,7 @@ function removeDataPool(namespace) {
 }
 
 export {
-  getDataPool,
+  getDataPoolEntity as getDataPool,
   createDataPool,
   removeDataPool,
 }

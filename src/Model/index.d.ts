@@ -59,8 +59,16 @@ interface dispatchOpt {
  */
 declare function removeModel(namespace: String): void
 
+/**
+ * 获取 model 的实例
+ *
+ * @param {String} namespace namespace
+ */
+declare function getModel(namespace: String): Model
+
 export {
   useModel,
   createModel,
   removeModel,
+  getModel,
 }

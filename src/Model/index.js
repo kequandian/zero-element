@@ -24,6 +24,9 @@ function getModel(namespace) {
   }
   return models[namespace].useModel();
 }
+function getModelEntity(namespace) {
+  return models[namespace].getModel();
+}
 
 function createModel({ namespace, reducers = {}, effects = {}, auto = false }) {
   models[namespace] = new Model({
@@ -57,4 +60,5 @@ export {
   checkDispatch as useModel,
   createModel,
   removeModel,
+  getModelEntity as getModel ,
 }

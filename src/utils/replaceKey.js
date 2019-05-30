@@ -1,11 +1,11 @@
 /**
  *  API 参数化的具体实现
- * @param {object} {modelStatus, dataPool} model state 和 dataPool
+ * @param {object} {model, dataPool} model 和 dataPool
  * - [id] 从 dataPool.location 中替换 id 的值
  * - (id) 从 dataPool.record 中替换 id 的值
- * - {id} 从 modelStatus 中替换 id 的值
+ * - {id} 从 model 中替换 id 的值
  */
-export default function replaceKey({ modelStatus, dataPool }) {
+export default function replaceKey({ model, dataPool }) {
   return {
     format: function format(string) {
       if (!string) {
@@ -29,7 +29,7 @@ export default function replaceKey({ modelStatus, dataPool }) {
             );
           } else if (key.indexOf('{') > -1) {
             string = string.replace(key,
-              modelStatus.formData[key.replace(/\{|\}/g, '')]
+              model.state.formData[key.replace(/\{|\}/g, '')]
             );
           }
         });

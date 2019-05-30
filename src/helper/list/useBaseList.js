@@ -1,9 +1,7 @@
 import { useModel } from '@/Model';
-import useAPI from '@/utils/hooks/useAPI';
+import { formatAPI } from '@/utils/format';
 import { get } from 'zero-element-global/lib/APIConfig';
 import { getDataPool } from '@/DataPool';
-
-import replaceKey from '@/utils/replaceKey';
 
 export default function useBaseList({ namespace, modelPath = 'listData' }, config) {
   const { API = {} } = config;
@@ -14,7 +12,7 @@ export default function useBaseList({ namespace, modelPath = 'listData' }, confi
 
   const listData = modelStatus[modelPath];
   const { current, pageSize, records = [] } = listData;
-  const formatAPI = useAPI(API, {
+  const fAPI = formatAPI(API, {
     namespace,
   });
 
@@ -23,7 +21,7 @@ export default function useBaseList({ namespace, modelPath = 'listData' }, confi
     pageSize = get('DEFAULT_pageSize'),
     queryData = {}
   }) {
-    const api = formatAPI.listAPI;
+    const api = fAPI.listAPI;
     if (api) {
       dispatch({
         type: 'fetchList',
@@ -47,13 +45,8 @@ export default function useBaseList({ namespace, modelPath = 'listData' }, confi
   }
 
   function onDelete({ record, options = {} }) {
-    dataPool.setRecord(record);
-    // const api = formatAPI.deleteAPI;
-    const a = replaceKey({
-      modelStatus,
-      dataPool,
-    });
-    const api = a.format(API.deleteAPI)
+    // dataPool.setRecord(record); 应该由 handleAction 的上一层调用
+    const api = fAPI.deleteAPI;
 
     if (api) {
       dispatch({
