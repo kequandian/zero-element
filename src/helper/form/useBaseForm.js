@@ -1,5 +1,6 @@
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
+import { PromiseAPI } from '@/utils/PromiseGen';
 
 export default function useBaseForm({ namespace, modelPath = 'formData' }, config) {
   const { API = {} } = config;
@@ -14,7 +15,7 @@ export default function useBaseForm({ namespace, modelPath = 'formData' }, confi
 
   function onGetOne({ }) {
     const api = fAPI.getAPI;
-    if (api)
+    return PromiseAPI(api, () => (
       dispatch({
         type: 'fetchOne',
         API: api,
@@ -25,13 +26,14 @@ export default function useBaseForm({ namespace, modelPath = 'formData' }, confi
           current,
           pageSize,
         },
-      });
+      })
+    )
+    );
   }
 
   function onCreateForm({ fields }) {
     const api = fAPI.createAPI;
-
-    if (api) {
+    return PromiseAPI(api, () => (
       dispatch({
         type: 'createForm',
         API: api,
@@ -40,18 +42,15 @@ export default function useBaseForm({ namespace, modelPath = 'formData' }, confi
           ...fields,
           ...formData,
         },
-      }).then(({ code }) => {
-        if (code === 200) {
-          console.log('创建成功');
-        }
-      });
-    }
+      })
+    )
+    );
   }
 
   function onUpdateForm({ fields }) {
     const api = formatAPI.updateAPI;
 
-    if (api) {
+    return PromiseAPI(api, () => (
       dispatch({
         type: 'updateForm',
         API: api,
@@ -60,12 +59,9 @@ export default function useBaseForm({ namespace, modelPath = 'formData' }, confi
           ...fields,
           ...formData,
         },
-      }).then(({ code }) => {
-        if (code === 200) {
-          console.log('更新成功');
-        }
-      });
-    }
+      })
+    )
+    );
   }
 
   return {

@@ -1,14 +1,13 @@
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from 'zero-element-global/lib/APIConfig';
-import { getDataPool } from '@/DataPool';
+import { PromiseAPI } from '@/utils/PromiseGen';
 
 export default function useBaseList({ namespace, modelPath = 'listData' }, config) {
   const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,
   });
-  const dataPool = getDataPool(namespace);
 
   const listData = modelStatus[modelPath];
   const { current, pageSize, records = [] } = listData;
@@ -22,7 +21,7 @@ export default function useBaseList({ namespace, modelPath = 'listData' }, confi
     queryData = {}
   }) {
     const api = fAPI.listAPI;
-    if (api) {
+    return PromiseAPI(api, () => (
       dispatch({
         type: 'fetchList',
         API: api,
@@ -33,8 +32,9 @@ export default function useBaseList({ namespace, modelPath = 'listData' }, confi
           current,
           pageSize,
         },
-      });
-    }
+      })
+    )
+    );
   }
 
   function onRefresh() {
