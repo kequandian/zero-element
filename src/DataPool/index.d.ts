@@ -2,46 +2,36 @@
 /**
  * 使用 DataPool
  *
- * @param {options} options 包含以下属性
- * - namespace 必须，一般与 model namespace 相同
- * @return {Array} 返回 array, 为 [ { record, location }, { setRecord, setLocation } ]
+ * @param {String} namespace 命名空间, 一般与 model namespace 相同
+ * @return {DataPool} DataPool 实例
  */
-declare function useDataPool(options: options): [
-  Object,
-  { setRecord, setLocation }
-]
+declare function getDataPool(namespace: String): DataPool
 
-interface options {
+class DataPool {
+
   /**
-   * DataPool 的命名空间
+   * 设置当前点击的列表行的数据
+   *
+   * @param {Object} data rowData
    */
-  namespace: String,
+  setRecord(data: Object): void
+
+  /**
+   * 自动获取 window.location 更新 location
+   *
+   */
+  setLocation(): void
 }
 
 /**
- * 删除指定的 DataPool
- *
- * @param {String} namespace namespace
- */
-declare function removeDataPool(namespace: String): void
-
-
-/**
- * 设置当前点击的列表行的数据
- *
- * @param {Object} data rowData
- */
-declare function setRecord(data: Object): void
-
-/**
- * 自动获取 window.location 更新 location
- *
- */
-declare function setLocation(): void
+  * 删除指定的 DataPool
+  *
+  * @param {String} namespace namespace
+  */
+ declare function removeDataPool(namespace: String): void
 
 export {
-  useDataPool,
+  getDataPool,
+  DataPool,
   removeDataPool,
-  setRecord,
-  setLocation,
 }

@@ -1,21 +1,23 @@
 import { useModel } from '@/Model';
 import useAPI from '@/utils/hooks/useAPI';
 import { get } from 'zero-element-global/lib/APIConfig';
-import { useDataPool } from '@/DataPool';
+import { getDataPool } from '@/DataPool';
+
+import replaceKey from '@/utils/replaceKey';
 
 export default function useBaseList({ namespace, modelPath = 'listData' }, config) {
   const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,
   });
-  const [, { setRecord }] = useDataPool({ namespace });
+  const dataPool = getDataPool(namespace);
 
   const listData = modelStatus[modelPath];
   const { current, pageSize, records = [] } = listData;
   const formatAPI = useAPI(API, {
     namespace,
   });
-  
+
   function onGetList({
     current = get('DEFAULT_current'),
     pageSize = get('DEFAULT_pageSize'),
@@ -45,8 +47,13 @@ export default function useBaseList({ namespace, modelPath = 'listData' }, confi
   }
 
   function onDelete({ record, options = {} }) {
-    setRecord(record);
-    const api = formatAPI.deleteAPI;
+    dataPool.setRecord(record);
+    // const api = formatAPI.deleteAPI;
+    const a = replaceKey({
+      modelStatus,
+      dataPool,
+    });
+    const api = a.format(API.deleteAPI)
 
     if (api) {
       dispatch({
@@ -65,8 +72,10 @@ export default function useBaseList({ namespace, modelPath = 'listData' }, confi
     config,
     data: records,
     modelStatus,
-    onGetList,
-    onRefresh,
-    onDelete,
+    handle: {
+      onGetList,
+      onRefresh,
+      onDelete,
+    }
   }
 }

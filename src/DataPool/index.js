@@ -2,18 +2,11 @@ import DataPool from './DataPool';
 
 const pools = {};
 
-function useDataPool(options) {
-  if (typeof options === 'object') {
-    const { namespace } = options;
-    return getDataPool(namespace);
-  }
-}
-
 function getDataPool(namespace) {
   if (!pools[namespace]) {
     createDataPool({ namespace });
   }
-  return pools[namespace].useDataPool();
+  return pools[namespace].getDataPool();
 }
 
 function createDataPool({ namespace }) {
@@ -25,7 +18,7 @@ function removeDataPool(namespace) {
 }
 
 export {
-  useDataPool,
+  getDataPool,
   createDataPool,
   removeDataPool,
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PageContext from '@/context/PageContext';
 import { useWillMount, useDidMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
-import { useDataPool, removeDataPool } from '@/DataPool';
+import { removeDataPool } from '@/DataPool';
 import Reader from '@/Reader';
 
 const { Provider } = PageContext;
