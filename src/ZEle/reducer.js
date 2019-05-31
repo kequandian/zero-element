@@ -1,10 +1,16 @@
 
 export default function reducer(state, { type, payload }) {
   const method = {
-    extra() {
+    extraNode() {
       return {
         ...state,
         extra: payload,
+      }
+    },
+    extraState() {
+      return {
+        ...state,
+        extraState: payload,
       }
     },
     defaults() {

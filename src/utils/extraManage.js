@@ -2,30 +2,53 @@ import React from 'react';
 const storage = {};
 
 export function initExtra(namespace, dispatch) {
-  storage[namespace] = {};
+  storage[namespace] = {
+    state: {},
+    node: {},
+  };
   dispatch({
-    type: 'extra',
-    payload: new Proxy(storage[namespace], {
-      get: function (target, name) {
-        return target[name];
-      },
-      set: function (obj, prop, value) {
-        if (value === null) {
-          delete obj[prop];
-        }
-        obj[prop] = value;
-        dispatch({
-          type: 'extra',
-          payload: obj,
-        });
-        return true;
-      }
-    })
+    type: 'extraNode',
+    payload: new Proxy(storage[namespace].node, handlerNode(namespace, dispatch))
+  });
+  dispatch({
+    type: 'extraState',
+    payload: new Proxy(storage[namespace].state, handlerState(namespace, dispatch))
   });
 }
+function handlerNode(namespace, dispatch) {
+  return {
+    set: function (obj, prop, value) {
+      if (value === null) {
+        delete obj[prop];
+      }
+      obj[prop] = value;
+      dispatch({
+        type: 'extraNode',
+        payload: new Proxy(storage[namespace].node, handlerNode(namespace, dispatch)),
+      });
+      return true;
+    }
+  }
+}
+function handlerState(namespace, dispatch) {
+  return {
+    set: function (obj, prop, value) {
+      if (value === null) {
+        delete obj[prop];
+      }
+      obj[prop] = value;
+      dispatch({
+        type: 'extraState',
+        payload: new Proxy(storage[namespace].state, handlerState(namespace, dispatch)),
+      });
+      return true;
+    }
+  }
+}
+
 export function getExtraAll(namespace) {
-  return Object.keys(storage[namespace]).map(key => {
-    return React.cloneElement(storage[namespace][key], {
+  return Object.keys(storage[namespace].node).map(key => {
+    return React.cloneElement(storage[namespace].node[key], {
       key,
     });
   })

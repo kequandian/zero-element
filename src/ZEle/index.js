@@ -13,6 +13,7 @@ export default function ZEle(props) {
   const [pageState, dispatch] = useReducer(reducer, {
     namespace,
     extra: {},
+    extraState: {},
   });
 
   useWillMount(_ => {

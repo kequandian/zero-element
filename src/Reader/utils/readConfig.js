@@ -1,7 +1,7 @@
 import React from 'react';
 import { BaseEnter } from '../components/Animation';
 
-import { Render } from 'zero-element-global/lib/baseComponents';
+import { Render } from 'zero-element-global/lib/container';
 import { Render as RenderLayout } from 'zero-element-global/lib/layout';
 
 export function UseLayout(props) {
