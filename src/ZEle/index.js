@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import PageContext from '@/context/PageContext';
 import { useWillMount, useDidMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
-import { removeDataPool } from '@/DataPool';
+import reducer from './reducer';
+import { destroyDataPool } from '@/DataPool';
 import Reader from '@/Reader';
+import { initExtra, getExtra, destroyExtra } from '@/utils/extraManage';
 
 const { Provider } = PageContext;
 
 export default function ZEle(props) {
   const { namespace } = props;
-  const [pageState, setPageState] = useState({
+  const [pageState, dispatch] = useReducer(reducer, {
     namespace,
+    extra: {},
+  });
+
+  useWillMount(_ => {
+    initExtra(namespace, dispatch);
   });
   useWillUnmount(() => {
-    removeDataPool(namespace);
+    destroyDataPool(namespace);
+    destroyExtra(namespace);
   });
 
   return <Provider value={pageState}>
     <Reader
       {...props}
     />
+    <div>
+      {pageState.extra.modal}
+    </div>
   </Provider>
 }

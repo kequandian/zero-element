@@ -13,12 +13,12 @@ function createDataPool({ namespace }) {
   pools[namespace] = new DataPool({ namespace });
 }
 
-function removeDataPool(namespace) {
+function destroyDataPool(namespace) {
   delete pools[namespace];
 }
 
 export {
   getDataPoolEntity as getDataPool,
   createDataPool,
-  removeDataPool,
+  destroyDataPool,
 }

@@ -28,10 +28,10 @@ class DataPool {
   *
   * @param {String} namespace namespace
   */
- declare function removeDataPool(namespace: String): void
+ declare function destroyDataPool(namespace: String): void
 
 export {
   getDataPool,
   DataPool,
-  removeDataPool,
+  destroyDataPool,
 }
