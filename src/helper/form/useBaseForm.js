@@ -1,12 +1,20 @@
+import { useContext } from 'react';
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { PromiseAPI } from '@/utils/PromiseGen';
+import PageContext from '@/context/PageContext';
 
-export default function useBaseForm({ namespace, modelPath = 'formData' }, config) {
+export default function useBaseForm({
+  namespace, modelPath = 'formData', symbol = `useBaseForm_${modelPath}`
+}, config) {
+
   const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,
+    type: 'useBaseForm',
+    symbol,
   });
+  const context = useContext(PageContext);
 
   const formData = modelStatus[modelPath];
   const fAPI = formatAPI(API, {
@@ -21,11 +29,7 @@ export default function useBaseForm({ namespace, modelPath = 'formData' }, confi
         API: api,
         MODELPATH: modelPath,
         DIRECTRETURN: false,
-        payload: {
-          ...queryData,
-          current,
-          pageSize,
-        },
+        payload: {},
       })
     )
     );
@@ -68,8 +72,11 @@ export default function useBaseForm({ namespace, modelPath = 'formData' }, confi
     config,
     data: formData,
     modelStatus,
-    onGetOne,
-    onCreateForm,
-    onUpdateForm,
+    context,
+    handle: {
+      onGetOne,
+      onCreateForm,
+      onUpdateForm,
+    }
   }
 }

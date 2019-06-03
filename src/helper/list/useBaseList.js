@@ -1,13 +1,21 @@
+import { useContext } from 'react';
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from 'zero-element-global/lib/APIConfig';
 import { PromiseAPI } from '@/utils/PromiseGen';
+import PageContext from '@/context/PageContext';
 
-export default function useBaseList({ namespace, modelPath = 'listData' }, config) {
+export default function useBaseList({
+  namespace, modelPath = 'listData', symbol = `useBaseList_${modelPath}`
+}, config) {
+  
   const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,
+    type: 'useBaseList',
+    symbol,
   });
+  const context = useContext(PageContext);
 
   const listData = modelStatus[modelPath];
   const { current, pageSize, records = [] } = listData;
@@ -65,6 +73,7 @@ export default function useBaseList({ namespace, modelPath = 'listData' }, confi
     config,
     data: records,
     modelStatus,
+    context,
     handle: {
       onGetList,
       onRefresh,

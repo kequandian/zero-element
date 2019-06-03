@@ -18,15 +18,18 @@ export default class Model {
     this.namespace = namespace;
     this.auto = auto;
   }
-  useModel() {
+  useModel(options) {
     const [, setState] = useState();
     useEffect(() => {
       // 初始订阅，或者取消订阅之后新的订阅
-      const index = this.queue.length;
-      this.queue.push(setState);
+      this.queue.push({
+        type: options.type,
+        symbol: options.symbol,
+        setState,
+      });
       return () => {
         // 更新后取消订阅
-        this.queue.splice(index, 1);
+        this.queue = this.queue.filter(item => item.symbol !== options.symbol);
       };
     });
     return [this.getState(), this.dispatch.bind(this)];
@@ -55,7 +58,7 @@ export default class Model {
           ...rst,
         };
         // 触发 state 更新
-        this.queue.forEach(setState => setState(this.state));
+        this.queue.forEach(item => item.setState(this.state));
       }
     } else {
       console.warn(`未定义的方法: ${action}`);

@@ -9,7 +9,7 @@ import { initExtra, getExtra, destroyExtra } from '@/utils/extraManage';
 const { Provider } = PageContext;
 
 export default function ZEle(props) {
-  const { namespace } = props;
+  const { namespace, destroy = {} } = props;
   const [pageState, dispatch] = useReducer(reducer, {
     namespace,
     extra: {},
@@ -20,10 +20,16 @@ export default function ZEle(props) {
     initExtra(namespace, dispatch);
   });
   useWillUnmount(() => {
-    destroyDataPool(namespace);
-    destroyExtra(namespace);
+    let destroyObj = destroy;
+    if (destroy && destroy === true) {
+      destroyObj = {
+        dataPool: true,
+        extra: true,
+      };
+    }
+    destroyObj.dataPool ? destroyDataPool(namespace) : void 0;
+    destroyObj.extra ? destroyExtra(namespace) : void 0;
   });
-
   return <Provider value={pageState}>
     <Reader
       {...props}

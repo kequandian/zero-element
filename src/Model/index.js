@@ -12,17 +12,17 @@ function checkDispatch(options) {
         dispatch,
       ];
     } else {
-      return getModel(namespace);
+      return getModel(options);
     }
   }
 }
 
-function getModel(namespace) {
+function getModel({ namespace, ...rest }) {
   if (!models[namespace]) {
     createModel({ namespace, auto: true });
     console.log('auto create model: ', namespace, models);
   }
-  return models[namespace].useModel();
+  return models[namespace].useModel(rest);
 }
 function getModelEntity(namespace) {
   return models[namespace].getModel();
@@ -60,5 +60,5 @@ export {
   checkDispatch as useModel,
   createModel,
   removeModel,
-  getModelEntity as getModel ,
+  getModelEntity as getModel,
 }

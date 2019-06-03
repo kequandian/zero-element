@@ -11,12 +11,16 @@ export function UseLayout(props) {
 }
 
 export function UseItem(props) {
-  const { namespace, config } = props;
+  const { namespace, config, ...restProps } = props;
   const { layout, component, config: itemCfg, ...restCfg } = config;
 
   return <BaseEnter {...config}>
     <UseLayout n={layout} config={itemCfg} {...restCfg}>
-      <Render n={component} namespace={namespace} config={itemCfg} />
+      <Render n={component}
+        namespace={namespace}
+        config={itemCfg}
+        {...restProps}
+      />
     </UseLayout>
   </BaseEnter>;
 }

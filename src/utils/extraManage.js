@@ -20,8 +20,10 @@ function handlerNode(namespace, dispatch) {
     set: function (obj, prop, value) {
       if (value === null) {
         delete obj[prop];
+      } else {
+        obj[prop] = value;
       }
-      obj[prop] = value;
+
       dispatch({
         type: 'extraNode',
         payload: new Proxy(storage[namespace].node, handlerNode(namespace, dispatch)),
@@ -35,8 +37,9 @@ function handlerState(namespace, dispatch) {
     set: function (obj, prop, value) {
       if (value === null) {
         delete obj[prop];
+      } else {
+        obj[prop] = value;
       }
-      obj[prop] = value;
       dispatch({
         type: 'extraState',
         payload: new Proxy(storage[namespace].state, handlerState(namespace, dispatch)),
