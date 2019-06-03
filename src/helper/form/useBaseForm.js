@@ -52,7 +52,7 @@ export default function useBaseForm({
   }
 
   function onUpdateForm({ fields }) {
-    const api = formatAPI.updateAPI;
+    const api = fAPI.updateAPI;
 
     return PromiseAPI(api, () => (
       dispatch({
