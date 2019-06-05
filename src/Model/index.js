@@ -34,6 +34,7 @@ function createModel({ namespace, reducers = {}, effects = {}, auto = false }) {
     state: {
       listData: {},
       formData: {},
+      searchData: {},
     },
     reducers: {
       save({ payload }, { state }) {

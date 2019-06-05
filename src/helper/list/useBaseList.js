@@ -4,12 +4,16 @@ import { formatAPI } from '@/utils/format';
 import { get } from 'zero-element-global/lib/APIConfig';
 import { PromiseAPI } from '@/utils/PromiseGen';
 import PageContext from '@/context/PageContext';
+import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
+import useShare from '@/utils/hooks/useShare';
 
 export default function useBaseList({
   namespace, modelPath = 'listData', symbol = `useBaseList_${modelPath}`
 }, config) {
-  
-  const { API = {} } = config;
+
+  const { API = {}, share } = config;
+  const [, setShare, destroyShare] = useShare({ share });
+
   const [modelStatus, dispatch] = useModel({
     namespace,
     type: 'useBaseList',
@@ -22,6 +26,15 @@ export default function useBaseList({
   const fAPI = formatAPI(API, {
     namespace,
   });
+
+  useWillMount(_ => {
+    if (share) {
+      setShare({
+        onGetList,
+      });
+    }
+  });
+  useWillUnmount(() => destroyShare('onGetList'));
 
   function onGetList({
     current = get('DEFAULT_current'),

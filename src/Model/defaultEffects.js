@@ -98,7 +98,7 @@ async function updateForm({ API, payload }, { put }) {
   const { data: result } = await update(API, payload);
 
   if (result && result.code === 200) {
-    console.log('添加数据成功');
+    console.log('修改数据成功');
   }
   return result;
 }
