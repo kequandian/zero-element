@@ -2,17 +2,20 @@ import { useContext, useRef } from 'react';
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from 'zero-element-global/lib/APIConfig';
-import { PromiseAPI } from '@/utils/PromiseGen';
 import PageContext from '@/context/PageContext';
 import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
 import useShare from '@/utils/hooks/useShare';
 
-export default function useBaseList({
-  namespace, modelPath = 'listData', symbol = `useBaseList_${modelPath}`
+export default function useBaseChildren({
+  namespace,
+  modelPath = 'formData',
+  itemsPath = 'items',
+  symbol = `useBaseChildren_${modelPath}_${itemsPath}`
 }, config) {
 
   const { API = {}, share } = config;
-  const symbolRef = useRef(Symbol('useBaseList'));
+  const symbolRef = useRef(Symbol('useBaseChildren'));
+  const idRef = useRef(0);
   const [, setShare, destroyShare] = useShare({
     share,
     symbol: symbolRef.current,
@@ -20,13 +23,13 @@ export default function useBaseList({
 
   const [modelStatus, dispatch] = useModel({
     namespace,
-    type: 'useBaseList',
+    type: 'useBaseChildren',
     symbol,
   });
   const context = useContext(PageContext);
 
-  const listData = modelStatus[modelPath];
-  const { current, pageSize, records = [] } = listData;
+  const formData = modelStatus[modelPath];
+  const itemsData = formData[itemsPath] || [];
   const fAPI = formatAPI(API, {
     namespace,
   });
@@ -46,54 +49,48 @@ export default function useBaseList({
     queryData = {}
   }) {
     const api = fAPI.listAPI;
-    return PromiseAPI(api, () => (
-      dispatch({
-        type: 'fetchList',
-        API: api,
-        MODELPATH: modelPath,
-        DIRECTRETURN: false,
-        payload: {
-          ...queryData,
-          current,
-          pageSize,
-        },
-      })
-    )
-    );
+    console.warn('TODO', api);
   }
 
-  function onRefresh() {
-    onGetList({
-      current,
-      pageSize,
+  function onCreate(data) {
+    itemsData.push({
+      ...data,
+      '_id': idRef.current++,
+    });
+    dispatch({
+      type: 'save',
+      payload: {
+        ...modelStatus,
+      }
     });
   }
 
-  function onDelete({ record, options = {} }) {
-    // dataPool.setRecord(record); 应该由 handleAction 的上一层调用
-    const api = fAPI.deleteAPI;
-
-    if (api) {
-      dispatch({
-        type: 'deleteOne',
-        API: api,
-        MODELPATH: modelPath,
-      }).then(({ code }) => {
-        if (code === 200) {
-          onRefresh();
+  function onDelete({ data, options = {} }) {
+    dispatch({
+      type: 'save',
+      payload: {
+        ...modelStatus,
+        [modelPath]: {
+          ...formData,
+          [itemsPath]: itemsData.filter(item => {
+            if(item.id !== undefined) {
+              return item.id !== data.id;
+            }
+            return item._id !== data._id;
+          }),
         }
-      });
-    }
+      }
+    });
   }
 
   return {
     config,
-    data: records,
+    data: itemsData,
     modelStatus,
     context,
     handle: {
       onGetList,
-      onRefresh,
+      onCreate,
       onDelete,
     }
   }

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { useModel } from '@/Model';
 import PageContext from '@/context/PageContext';
 import useShare from '@/utils/hooks/useShare';
@@ -8,7 +8,11 @@ export default function useBaseSearch({
 }, config) {
 
   const { share } = config;
-  const [shareData] = useShare({ share });
+  const symbolRef = useRef(Symbol('useBaseSearch'));
+  const [shareData] = useShare({
+    share,
+    symbol: symbolRef.current,
+  });
   const [modelStatus, dispatch] = useModel({
     namespace,
     type: 'useBaseSearch',
@@ -20,7 +24,7 @@ export default function useBaseSearch({
 
   function onSearch(options) {
     const { onGetList } = shareData;
-    if(onGetList) {
+    if (onGetList) {
       onGetList(options);
     } else {
       console.warn(`请在 conifg 中使用 share 来绑定需要刷新的 Table`);

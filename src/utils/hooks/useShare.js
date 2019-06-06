@@ -20,7 +20,7 @@ export default function useShare(options) {
     shareStorage[share] = new Share(share);
   }
 
-  return shareStorage[share].useShare();
+  return shareStorage[share].useShare(options);
 }
 
 class Share {
@@ -29,15 +29,17 @@ class Share {
   constructor(share) {
     this.key = share;
   }
-  useShare() {
+  useShare(options) {
     const [, set] = useState();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-      const index = this.queue.length;
-      this.queue.push(set);
+      this.queue.push({
+        set,
+        symbol: options.symbol,
+      });
 
-      return () => this.queue.splice(index, 1);
+      return () => this.queue = this.queue.filter(item => item.symbol !== options.symbol);
     });
     return [
       this.state,
@@ -53,7 +55,7 @@ class Share {
       ...this.state,
       ...data,
     }
-    this.queue.forEach(set => set(this.state));
+    this.queue.forEach(item => item.set(this.state));
   }
   destroyShare(...keyList) {
     if (keyList.length === 0) {
