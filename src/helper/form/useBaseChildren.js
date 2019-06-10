@@ -1,5 +1,5 @@
 import { useContext, useRef } from 'react';
-import { useModel } from '@/Model';
+import { useModel, getModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from 'zero-element-global/lib/APIConfig';
 import PageContext from '@/context/PageContext';
@@ -21,7 +21,9 @@ export default function useBaseChildren({
     symbol: symbolRef.current,
   });
 
-  const [modelStatus, dispatch] = useModel({
+  const model = getModel(namespace);
+  const modelStatus = model.state;
+  const [, dispatch] = useModel({
     namespace,
     type: 'useBaseChildren',
     symbol,
@@ -29,7 +31,9 @@ export default function useBaseChildren({
   const context = useContext(PageContext);
 
   const formData = modelStatus[modelPath];
+
   const itemsData = formData[itemsPath] || [];
+
   const fAPI = formatAPI(API, {
     namespace,
   });
@@ -61,24 +65,30 @@ export default function useBaseChildren({
       type: 'save',
       payload: {
         ...modelStatus,
+        [modelPath]: {
+          ...formData,
+          [itemsPath]: itemsData,
+        },
       }
     });
   }
 
-  function onDelete({ data, options = {} }) {
+  function onRemoveChild({ record, options = {} }) {
+
+    const test = itemsData.filter(item => {
+      if (item._id !== undefined) {
+        return item._id !== record._id;
+      }
+      return item.id !== record.id;
+    });
+
     dispatch({
-      type: 'save',
+      type: 'saveData',
       payload: {
-        ...modelStatus,
-        [modelPath]: {
-          ...formData,
-          [itemsPath]: itemsData.filter(item => {
-            if(item.id !== undefined) {
-              return item.id !== data.id;
-            }
-            return item._id !== data._id;
-          }),
-        }
+        key: modelPath,
+        data: {
+          [itemsPath]: test,
+        },
       }
     });
   }
@@ -91,7 +101,7 @@ export default function useBaseChildren({
     handle: {
       onGetList,
       onCreate,
-      onDelete,
+      onRemoveChild,
     }
   }
 }

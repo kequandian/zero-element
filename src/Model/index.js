@@ -43,6 +43,16 @@ function createModel({ namespace, reducers = {}, effects = {}, auto = false }) {
           ...payload
         }
       },
+      saveData({ payload }, { state }) {
+        const { key, data } = payload;
+        return {
+          ...state,
+          [key]: {
+            ...state[key],
+            ...data,
+          }
+        }
+      },
       ...reducers,
     },
     effects: {

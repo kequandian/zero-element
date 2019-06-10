@@ -37,6 +37,19 @@ export default class Model {
   getState() {
     return this.state;
   }
+  setState(key, data) {
+    if (typeof key === 'string') {
+      this.state[key] = {
+        ...(this.state[key] || {}),
+        ...data,
+      }
+    } else {
+      this.state = {
+        ...this.getState(),
+        ...key,
+      }
+    }
+  }
   getModel() {
     return this;
   }
@@ -53,10 +66,7 @@ export default class Model {
         return rst;
       } else {
         // reducers
-        this.state = {
-          ...this.getState(),
-          ...rst,
-        };
+        this.setState(rst);
         // 触发 state 更新
         this.queue.forEach(item => item.setState(this.state));
       }
