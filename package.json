@@ -1,6 +1,6 @@
 {
   "name": "zero-element",
-  "version": "1.0.0-beta.7",
+  "version": "1.0.0-beta.8",
   "description": "基于 React 的后台页面快速开发框架",
   "main": "lib/index.js",
   "scripts": {

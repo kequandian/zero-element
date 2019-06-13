@@ -21,7 +21,7 @@ export default function replaceKey({ model, dataPool }) {
         keyList && keyList.forEach(key => {
           if (key.indexOf('[') > -1) {
             string = string.replace(key,
-              dataPool.location[key.replace(/\[|\]/g, '')]
+              dataPool.getLocationSearch()[key.replace(/\[|\]/g, '')]
             );
           } else if (key.indexOf('(') > -1) {
             string = string.replace(key,
