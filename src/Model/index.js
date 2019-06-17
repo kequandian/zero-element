@@ -28,13 +28,14 @@ function getModelEntity(namespace) {
   return models[namespace].getModel();
 }
 
-function createModel({ namespace, reducers = {}, effects = {}, auto = false }) {
+function createModel({ namespace, state = {}, reducers = {}, effects = {}, auto = false }) {
   models[namespace] = new Model({
     namespace,
     state: {
       listData: {},
       formData: {},
       searchData: {},
+      ...state,
     },
     reducers: {
       save({ payload }, { state }) {
@@ -61,6 +62,8 @@ function createModel({ namespace, reducers = {}, effects = {}, auto = false }) {
     },
     auto,
   });
+
+  return models[namespace];
 }
 
 function removeModel(namespace) {
