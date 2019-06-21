@@ -6,7 +6,7 @@ export default function Reader(props) {
   const { namespace, config = {}, ...restProps } = props;
 
   return (
-    <UseLayout n={config.layout} {...(config.config || {})}>
+    <UseLayout n={config.layout} title={config.title} {...(config.config || {})}>
       {config.items && config.items.map((itemCfg, i) =>
         <UseItem key={i}
           config={itemCfg}
