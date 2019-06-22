@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { get } from 'zero-element-global/lib/APIConfig';
+import { getToken } from './token';
 
 const instance = axios.create({
   baseURL: get('endpoint'),
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-    // 'Authorization': "Bearer " + getToken(),
+    'Authorization': "Bearer " + getToken(),
   }
 });
 

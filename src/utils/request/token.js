@@ -1,4 +1,4 @@
-import { LS, SS } from '../utils';
+import { LS, SS } from '../storage';
 
 export function getToken() {
   return SS.get('token') || LS.get('token');
