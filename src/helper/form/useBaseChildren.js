@@ -9,16 +9,13 @@ import useShare from '@/utils/hooks/useShare';
 export default function useBaseChildren({
   namespace,
   modelPath = 'formData',
-  itemsPath = 'items',
-  symbol = `useBaseChildren_${modelPath}_${itemsPath}`
+  itemsPath = 'items'
 }, config) {
 
   const { API = {}, share } = config;
-  const symbolRef = useRef(Symbol('useBaseChildren'));
   const idRef = useRef(0);
   const [, setShare, destroyShare] = useShare({
     share,
-    symbol: symbolRef.current,
   });
 
   const model = getModel(namespace);
@@ -26,7 +23,6 @@ export default function useBaseChildren({
   const [, dispatch] = useModel({
     namespace,
     type: 'useBaseChildren',
-    symbol,
   });
   const context = useContext(PageContext);
 

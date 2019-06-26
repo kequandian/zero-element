@@ -34,12 +34,13 @@ class Share {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-      this.queue.push({
-        set,
-        symbol: options.symbol,
-      });
+      const index = this.queue.length;
 
-      return () => this.queue = this.queue.filter(item => item.symbol !== options.symbol);
+      this.queue.push(set);
+
+      return () => {
+        this.queue.splice(index, 1);
+      };
     });
     return [
       this.state,
@@ -55,7 +56,9 @@ class Share {
       ...this.state,
       ...data,
     }
-    this.queue.forEach(item => item.set(this.state));
+    const queue = [].concat(this.queue);
+    this.queue.length = 0;
+    queue.forEach(set => set(this.state));
   }
   destroyShare(...keyList) {
     if (keyList.length === 0) {

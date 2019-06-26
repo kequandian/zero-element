@@ -1,22 +1,19 @@
-import { useContext, useRef } from 'react';
+import { useContext } from 'react';
 import { useModel } from '@/Model';
 import PageContext from '@/context/PageContext';
 import useShare from '@/utils/hooks/useShare';
 
 export default function useBaseSearch({
-  namespace, modelPath = 'searchData', symbol = `useBaseSearch_${modelPath}`
+  namespace, modelPath = 'searchData'
 }, config) {
 
   const { share } = config;
-  const symbolRef = useRef(Symbol('useBaseSearch'));
   const [shareData] = useShare({
     share,
-    symbol: symbolRef.current,
   });
   const [modelStatus, dispatch] = useModel({
     namespace,
     type: 'useBaseSearch',
-    symbol,
   });
   const context = useContext(PageContext);
 

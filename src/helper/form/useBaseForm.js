@@ -5,14 +5,13 @@ import { PromiseAPI } from '@/utils/PromiseGen';
 import PageContext from '@/context/PageContext';
 
 export default function useBaseForm({
-  namespace, modelPath = 'formData', symbol = `useBaseForm_${modelPath}`
+  namespace, modelPath = 'formData',
 }, config) {
 
   const { API = {} } = config;
   const [modelStatus, dispatch] = useModel({
     namespace,
     type: 'useBaseForm',
-    symbol,
   });
   const context = useContext(PageContext);
 
@@ -49,6 +48,15 @@ export default function useBaseForm({
       })
     )
     );
+    
+  }
+  function onClearForm() {
+    return dispatch({
+      type: 'save',
+      payload: {
+        [modelPath]: {},
+      },
+    });
   }
 
   function onUpdateForm({ fields }) {
@@ -77,6 +85,7 @@ export default function useBaseForm({
       onGetOne,
       onCreateForm,
       onUpdateForm,
+      onClearForm,
     }
   }
 }

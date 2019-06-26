@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { useContext } from 'react';
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from 'zero-element-global/lib/APIConfig';
@@ -8,20 +8,17 @@ import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
 import useShare from '@/utils/hooks/useShare';
 
 export default function useBaseList({
-  namespace, modelPath = 'listData', symbol = `useBaseList_${modelPath}`
+  namespace, modelPath = 'listData'
 }, config) {
 
   const { API = {}, share } = config;
-  const symbolRef = useRef(Symbol('useBaseList'));
   const [, setShare, destroyShare] = useShare({
     share,
-    symbol: symbolRef.current,
   });
 
   const [modelStatus, dispatch] = useModel({
     namespace,
     type: 'useBaseList',
-    symbol,
   });
   const context = useContext(PageContext);
 

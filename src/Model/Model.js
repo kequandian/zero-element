@@ -21,15 +21,15 @@ export default class Model {
   useModel(options) {
     const [, setState] = useState();
     useEffect(() => {
+      const index = this.queue.length;
       // 初始订阅，或者取消订阅之后新的订阅
       this.queue.push({
         type: options.type,
-        symbol: options.symbol,
         setState,
       });
       return () => {
         // 更新后取消订阅
-        this.queue = this.queue.filter(item => item.symbol !== options.symbol);
+        this.queue.splice(index, 1);
       };
     });
     return [this.getState(), this.dispatch.bind(this)];
@@ -68,7 +68,9 @@ export default class Model {
         // reducers
         this.setState(rst);
         // 触发 state 更新
-        this.queue.forEach(item => item.setState(this.state));
+        const queue = [].concat(this.queue);
+        this.queue.length = 0;
+        queue.forEach(item => item.setState(this.state));
       }
     } else {
       console.warn(`未定义的方法: ${action}`);
