@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 
-const isPromise = func => {
-  if (func instanceof Promise) return true;
-  if (typeof func === 'object' && typeof func.then === 'function') return true;
-  return false;
-}
-
 export default class Model {
   constructor({ namespace, state = {}, reducers = {}, effects = {}, auto }) {
     this.state = state;
@@ -21,15 +15,16 @@ export default class Model {
   useModel(options) {
     const [, setState] = useState();
     useEffect(() => {
-      const index = this.queue.length;
       // 初始订阅，或者取消订阅之后新的订阅
+      const symbol = Symbol(options.type);
       this.queue.push({
         type: options.type,
+        symbol,
         setState,
       });
       return () => {
         // 更新后取消订阅
-        this.queue.splice(index, 1);
+        this.queue = this.queue.filter(item => item.symbol !== symbol);
       };
     });
     return [this.getState(), this.dispatch.bind(this)];
@@ -55,25 +50,46 @@ export default class Model {
   }
   dispatch(data) {
     const { type } = data;
-    const action = this.reducers[type] || this.effects[type];
-    if (action) {
+
+    // reducers
+    if (this.reducers[type]) {
+      const action = this.reducers[type];
       const rst = action(data, {
+        state: this.getState(),
+      });
+      this.setState(rst);
+      // 触发 state 更新
+      this.queue.forEach(item => item.setState(this.state));
+      return;
+    }
+    // effects
+    else if (this.effects[type]) {
+      const action = (...arg) => new Promise((res, rej) => {
+        this.dispatch({
+          type: 'loading',
+          payload: {
+            loading: true,
+            effect: type,
+          }
+        });
+        const rst = this.effects[type](...arg);
+        rst.then(res).catch(rej);
+      }).finally(_ => {
+        this.dispatch({
+          type: 'loading',
+          payload: {
+            loading: false,
+            effect: type,
+          }
+        });
+      });
+
+      return action(data, {
         state: this.getState(),
         put: this.dispatch.bind(this),
       });
-      if (isPromise(rst)) {
-        // effects
-        return rst;
-      } else {
-        // reducers
-        this.setState(rst);
-        // 触发 state 更新
-        const queue = [].concat(this.queue);
-        this.queue.length = 0;
-        queue.forEach(item => item.setState(this.state));
-      }
-    } else {
-      console.warn(`未定义的方法: ${action}`);
     }
+
+    console.warn(`未定义的方法: ${action}`);
   }
 }

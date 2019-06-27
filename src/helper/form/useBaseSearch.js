@@ -29,6 +29,7 @@ export default function useBaseSearch({
   }
 
   return {
+    loading: modelStatus.load.effects['fetchList'] || false,
     config,
     data: searchData,
     modelStatus,

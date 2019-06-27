@@ -35,6 +35,10 @@ function createModel({ namespace, state = {}, reducers = {}, effects = {}, auto 
       listData: {},
       formData: {},
       searchData: {},
+      load: {
+        loading: false,
+        effects: {},
+      },
       ...state,
     },
     reducers: {
@@ -51,6 +55,18 @@ function createModel({ namespace, state = {}, reducers = {}, effects = {}, auto 
           [key]: {
             ...state[key],
             ...data,
+          }
+        }
+      },
+      loading({ payload }, { state }) {
+        const { loading, effect } = payload;
+        return {
+          ...state,
+          load: {
+            loading,
+            effects: {
+              [effect]: loading,
+            }
           }
         }
       },

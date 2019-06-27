@@ -48,7 +48,7 @@ export default function useBaseForm({
       })
     )
     );
-    
+
   }
   function onClearForm() {
     return dispatch({
@@ -77,6 +77,7 @@ export default function useBaseForm({
   }
 
   return {
+    loading: modelStatus.load.effects['fetchOne'] || modelStatus.load.effects['createForm'] || modelStatus.load.effects['updateForm'] || false,
     config,
     data: formData,
     modelStatus,

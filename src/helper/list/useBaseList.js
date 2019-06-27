@@ -84,6 +84,7 @@ export default function useBaseList({
   }
 
   return {
+    loading: modelStatus.load.effects['fetchList'] || false,
     config,
     data: records,
     modelStatus,
