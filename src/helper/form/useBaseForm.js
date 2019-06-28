@@ -42,21 +42,13 @@ export default function useBaseForm({
         API: api,
         MODELPATH: modelPath,
         payload: {
-          ...fields,
           ...formData,
+          ...fields, // 用户输入优先
         },
       })
     )
     );
 
-  }
-  function onClearForm() {
-    return dispatch({
-      type: 'save',
-      payload: {
-        [modelPath]: {},
-      },
-    });
   }
 
   function onUpdateForm({ fields }) {
@@ -68,12 +60,21 @@ export default function useBaseForm({
         API: api,
         MODELPATH: modelPath,
         payload: {
-          ...fields,
           ...formData,
+          ...fields, // 用户输入优先
         },
       })
     )
     );
+  }
+
+  function onClearForm() {
+    return dispatch({
+      type: 'save',
+      payload: {
+        [modelPath]: {},
+      },
+    });
   }
 
   return {

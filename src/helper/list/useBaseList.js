@@ -83,6 +83,15 @@ export default function useBaseList({
     }
   }
 
+  function onClearList() {
+    return dispatch({
+      type: 'save',
+      payload: {
+        [modelPath]: {},
+      },
+    });
+  }
+
   return {
     loading: modelStatus.load.effects['fetchList'] || false,
     config,
@@ -93,6 +102,7 @@ export default function useBaseList({
       onGetList,
       onRefresh,
       onDelete,
+      onClearList,
     }
   }
 }

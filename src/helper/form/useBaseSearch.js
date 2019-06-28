@@ -28,6 +28,15 @@ export default function useBaseSearch({
     }
   }
 
+  function onClearSearch() {
+    return dispatch({
+      type: 'save',
+      payload: {
+        [modelPath]: {},
+      },
+    });
+  }
+
   return {
     loading: modelStatus.load.effects['fetchList'] || false,
     config,
@@ -36,6 +45,7 @@ export default function useBaseSearch({
     context,
     handle: {
       onSearch,
+      onClearSearch,
     }
   }
 }
