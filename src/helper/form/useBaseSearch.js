@@ -17,7 +17,7 @@ export default function useBaseSearch({
   });
   const context = useContext(PageContext);
 
-  const searchData = modelStatus[modelPath];
+  const searchData = modelStatus[modelPath] || {};
 
   function onSearch(options) {
     const { onGetList } = shareData;

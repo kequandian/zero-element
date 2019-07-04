@@ -62,7 +62,6 @@ export default function useBaseChildren({
       payload: {
         ...modelStatus,
         [modelPath]: {
-          ...formData,
           [itemsPath]: itemsData,
         },
       }
@@ -71,7 +70,7 @@ export default function useBaseChildren({
 
   function onRemoveChild({ record, options = {} }) {
 
-    const test = itemsData.filter(item => {
+    const temp = itemsData.filter(item => {
       if (item._id !== undefined) {
         return item._id !== record._id;
       }
@@ -83,7 +82,7 @@ export default function useBaseChildren({
       payload: {
         key: modelPath,
         data: {
-          [itemsPath]: test,
+          [itemsPath]: temp,
         },
       }
     });

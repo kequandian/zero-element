@@ -15,7 +15,7 @@ export default function useBaseForm({
   });
   const context = useContext(PageContext);
 
-  const formData = modelStatus[modelPath];
+  const formData = modelStatus[modelPath] || {};
   const fAPI = formatAPI(API, {
     namespace,
   });
