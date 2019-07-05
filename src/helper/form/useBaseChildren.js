@@ -9,7 +9,8 @@ import useShare from '@/utils/hooks/useShare';
 export default function useBaseChildren({
   namespace,
   modelPath = 'formData',
-  itemsPath = 'items'
+  itemsPath = 'items',
+  extraData,
 }, config) {
 
   const { API = {}, share } = config;
@@ -32,6 +33,7 @@ export default function useBaseChildren({
 
   const fAPI = formatAPI(API, {
     namespace,
+    data: extraData,
   });
 
   useWillMount(_ => {

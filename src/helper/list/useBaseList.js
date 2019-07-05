@@ -8,7 +8,8 @@ import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
 import useShare from '@/utils/hooks/useShare';
 
 export default function useBaseList({
-  namespace, modelPath = 'listData'
+  namespace, modelPath = 'listData',
+  extraData
 }, config) {
 
   const { API = {}, share } = config;
@@ -26,6 +27,7 @@ export default function useBaseList({
   const { current, pageSize, records = [] } = listData;
   const fAPI = formatAPI(API, {
     namespace,
+    data: extraData,
   });
 
   useWillMount(_ => {

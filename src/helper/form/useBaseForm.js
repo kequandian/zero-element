@@ -6,6 +6,7 @@ import PageContext from '@/context/PageContext';
 
 export default function useBaseForm({
   namespace, modelPath = 'formData',
+  extraData,
 }, config) {
 
   const { API = {} } = config;
@@ -18,6 +19,7 @@ export default function useBaseForm({
   const formData = modelStatus[modelPath] || {};
   const fAPI = formatAPI(API, {
     namespace,
+    data: extraData,
   });
 
   function onGetOne({ }) {

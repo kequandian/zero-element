@@ -2,13 +2,14 @@ import { getModel } from '@/Model';
 import { getDataPool } from '@/DataPool';
 import replaceKey from './replaceKey';
 
-export function formatAPI(API, { namespace }) {
+export function formatAPI(API, { namespace, data }) {
   const model = getModel(namespace);
   const dataPool = getDataPool(namespace);
 
   const APIUtils = replaceKey({
     model,
     dataPool,
+    data,
   });
 
   if (typeof API === 'string') {

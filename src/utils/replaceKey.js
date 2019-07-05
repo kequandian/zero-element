@@ -4,8 +4,9 @@
  * - [id] 从 dataPool.location 中替换 id 的值
  * - (id) 从 dataPool.record 中替换 id 的值
  * - {id} 从 model 中替换 id 的值
+ * - <id> 从传入的 data 中替换 id 的值
  */
-export default function replaceKey({ model, dataPool }) {
+export default function replaceKey({ model, dataPool, data = {} }) {
   return {
     format: function format(string) {
       if (!string) {
@@ -16,7 +17,7 @@ export default function replaceKey({ model, dataPool }) {
         return string;
       };
       if (typeof (string) === 'string') {
-        const keyList = string.match(/\{\w+\}|\[\w+\]|\(\w+\)/g);
+        const keyList = string.match(/\{\w+\}|\[\w+\]|\(\w+\)|\<\w+\>/g);
 
         keyList && keyList.forEach(key => {
           if (key.indexOf('[') > -1) {
@@ -30,6 +31,10 @@ export default function replaceKey({ model, dataPool }) {
           } else if (key.indexOf('{') > -1) {
             string = string.replace(key,
               model.state.formData[key.replace(/\{|\}/g, '')]
+            );
+          } else if (key.indexOf('<') > -1) {
+            string = string.replace(key,
+              data[key.replace(/\<|\>/g, '')]
             );
           }
         });
