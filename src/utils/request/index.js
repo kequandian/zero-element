@@ -1,5 +1,6 @@
 import request, { error } from './axios';
 import { get as getEndpoint } from './endpoint';
+import { getToken } from './token';
 
 export async function query(api, params = {}) {
   return request.get(api, {
@@ -8,20 +9,32 @@ export async function query(api, params = {}) {
       ...params,
     },
     baseURL: getEndpoint(),
+    headers: {
+      'Authorization': "Bearer " + getToken(),
+    },
   }).catch(error);
 }
 export async function post(api, data = {}) {
   return request.post(api, data, {
     baseURL: getEndpoint(),
+    headers: {
+      'Authorization': "Bearer " + getToken(),
+    }
   }).catch(error);
 }
 export async function update(api, data = {}) {
   return request.put(api, data, {
     baseURL: getEndpoint(),
+    headers: {
+      'Authorization': "Bearer " + getToken(),
+    },
   }).catch(error);
 }
 export async function remove(api) {
   return request.delete(api, {
     baseURL: getEndpoint(),
+    headers: {
+      'Authorization': "Bearer " + getToken(),
+    },
   }).catch(error);
 }
