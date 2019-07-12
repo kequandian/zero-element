@@ -69,6 +69,18 @@ export default function useBaseChildren({
       }
     });
   }
+  function onEdit(index, data) {
+    itemsData[index] = data;
+    dispatch({
+      type: 'save',
+      payload: {
+        ...modelStatus,
+        [modelPath]: {
+          [itemsPath]: itemsData,
+        },
+      }
+    });
+  }
 
   function onRemoveChild({ record, options = {} }) {
 
@@ -98,6 +110,7 @@ export default function useBaseChildren({
     handle: {
       onGetList,
       onCreate,
+      onEdit,
       onRemoveChild,
     }
   }
