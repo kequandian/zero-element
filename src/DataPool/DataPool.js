@@ -1,6 +1,13 @@
 import window from '@/utils/window';
 import qs from 'qs';
 
+function getSearch(location) {
+  if(location.search) {
+    return location.search.replace('?', '');
+  } else {
+    return location.hash.split('?')[1] || '';
+  }
+}
 export default class DataPool {
   constructor({ namespace }) {
     this.namespace = namespace;
@@ -14,9 +21,9 @@ export default class DataPool {
     this.record = data;
   }
   getLocationSearch() {
-    const { location } = window;
+    const { location = {} } = window;
     if (location) {
-      return qs.parse(location.search.replace('?', ''));
+      return qs.parse(getSearch(location));
     }
     return {};
   }
