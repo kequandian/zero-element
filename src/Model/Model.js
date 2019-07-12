@@ -90,6 +90,6 @@ export default class Model {
       });
     }
 
-    console.warn(`未定义的方法: ${action}`);
+    console.warn(`未定义的方法: ${type}`);
   }
 }

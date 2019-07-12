@@ -17,7 +17,8 @@ export default function replaceKey({ model, dataPool, data = {} }) {
         return string;
       };
       if (typeof (string) === 'string') {
-        const keyList = string.match(/\{\w+\}|\[\w+\]|\(\w+\)|\<\w+\>/g);
+        const keyList =
+          string.match(/\{\w+(.\w+)*\}|\[\w+\]|\(\w+(.\w+)*\)|\<\w+(.\w+)*\>/g);
 
         keyList && keyList.forEach(key => {
           if (key.indexOf('[') > -1) {
@@ -26,15 +27,15 @@ export default function replaceKey({ model, dataPool, data = {} }) {
             );
           } else if (key.indexOf('(') > -1) {
             string = string.replace(key,
-              dataPool.record[key.replace(/\(|\)/g, '')]
+              getDeepValue(dataPool.record, key.replace(/\(|\)/g, ''))
             );
           } else if (key.indexOf('{') > -1) {
             string = string.replace(key,
-              model.state.formData[key.replace(/\{|\}/g, '')]
+              getDeepValue(model.state.formData, key.replace(/\{|\}/g, ''))
             );
           } else if (key.indexOf('<') > -1) {
             string = string.replace(key,
-              data[key.replace(/\<|\>/g, '')]
+              getDeepValue(data, key.replace(/\<|\>/g, ''))
             );
           }
         });
@@ -61,4 +62,15 @@ export default function replaceKey({ model, dataPool, data = {} }) {
       return string;
     }
   }
+}
+
+function getDeepValue(data, key) {
+  if (key.indexOf('.') > -1) {
+    let rst = data;
+    key.split('.').forEach(k => {
+      rst = rst[k];
+    })
+    return rst;
+  }
+  return data[key];
 }
