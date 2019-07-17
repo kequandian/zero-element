@@ -48,6 +48,9 @@ export default class Model {
   getModel() {
     return this;
   }
+  update() {
+    this.queue.forEach(item => item.setState({}));
+  }
   dispatch(data) {
     const { type } = data;
 
@@ -59,7 +62,7 @@ export default class Model {
       });
       this.setState(rst);
       // 触发 state 更新
-      this.queue.forEach(item => item.setState(this.state));
+      this.update();
       return;
     }
     // effects

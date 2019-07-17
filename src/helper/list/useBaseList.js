@@ -100,6 +100,7 @@ export default function useBaseList({
     data: records,
     modelStatus,
     context,
+    dispatch,
     handle: {
       onGetList,
       onRefresh,

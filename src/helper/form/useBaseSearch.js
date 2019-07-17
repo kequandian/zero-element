@@ -43,6 +43,7 @@ export default function useBaseSearch({
     data: searchData,
     modelStatus,
     context,
+    dispatch,
     handle: {
       onSearch,
       onClearSearch,

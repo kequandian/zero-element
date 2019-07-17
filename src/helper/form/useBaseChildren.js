@@ -107,6 +107,7 @@ export default function useBaseChildren({
     data: itemsData,
     modelStatus,
     context,
+    dispatch,
     handle: {
       onGetList,
       onCreate,

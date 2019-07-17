@@ -13,7 +13,7 @@ const instance = axios.create({
 });
 
 function error(err) {
-  const { Unauthorized } = global;
+  const { Unauthorized, RequestError } = global;
 
   if (err.response) {
     // 非 200 状态码
@@ -21,9 +21,15 @@ function error(err) {
       Unauthorized(err.response);
     }
     console.warn('请求错误', err.response.status, err.response);
+    if(typeof RequestError === 'function') {
+      RequestError(err.response);
+    }
   } else {
     // 意料外错误
     console.warn('Error', err.message);
+    if(typeof RequestError === 'function') {
+      RequestError(err.message);
+    }
   }
   console.warn('请求的配置: ', err.config);
   return Promise.reject(err);
