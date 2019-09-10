@@ -1,3 +1,4 @@
+import qs from 'qs';
 import request, { error } from './axios';
 import { get as getEndpoint } from './endpoint';
 import { getToken } from './token';
@@ -9,6 +10,9 @@ export async function query(api, params = {}) {
       ...params,
     },
     baseURL: getEndpoint(),
+    paramsSerializer: function (params) {
+      return qs.stringify(params, { arrayFormat: 'repeat' });
+    },
     headers: {
       'Authorization': "Bearer " + getToken(),
     },
