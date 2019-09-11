@@ -55,8 +55,8 @@ export default function useBaseList({
         DIRECTRETURN: false,
         payload: {
           ...queryData,
-          current,
-          pageSize,
+          [get('REQUEST_FIELD_current')]: current,
+          [get('REQUEST_FIELD_pageSize')]: pageSize,
         },
       })
     )

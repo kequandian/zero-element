@@ -27,10 +27,10 @@ async function fetchList({ API, payload, DIRECTRETURN, MODELPATH }, { put }) {
         payload: {
           [MODELPATH]: {
             ...data,
-            current: data[get('FIELD_current')],
-            pageSize: data[get('FIELD_pageSize')],
-            total: data[get('FIELD_total')],
-            records: data[get('FIELD_records')],
+            current: data[get('RESPONSE_FIELD_current')],
+            pageSize: data[get('RESPONSE_FIELD_pageSize')],
+            total: data[get('RESPONSE_FIELD_total')],
+            records: data[get('RESPONSE_FIELD_records')],
           },
         }
       })
