@@ -18,14 +18,19 @@ function checkDispatch(options) {
 }
 
 function getModel({ namespace, ...rest }) {
+  checkModel(namespace);
+  return models[namespace].useModel(rest);
+}
+function getModelEntity(namespace) {
+  checkModel(namespace);
+  return models[namespace].getModel();
+}
+
+function checkModel(namespace) {
   if (!models[namespace]) {
     createModel({ namespace, auto: true });
     console.log('auto create model: ', namespace, models);
   }
-  return models[namespace].useModel(rest);
-}
-function getModelEntity(namespace) {
-  return models[namespace].getModel();
 }
 
 function createModel({ namespace, state = {}, reducers = {}, effects = {}, auto = false }) {
