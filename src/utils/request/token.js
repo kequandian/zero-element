@@ -22,7 +22,8 @@ export function removeToken() {
 
   ['token', 'permissions', 'avatar'].forEach(key => {
     LS.del(key);
-  })
+    SS.del(key);
+  });
 }
 
 export function getAccount() {

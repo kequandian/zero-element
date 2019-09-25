@@ -20,6 +20,8 @@ export function PromiseAPI(boolean, func, options = {}) {
         } else {
           rej(message);
         }
+      }).catch(err => {
+        rej(err);;
       });
     } else {
       rej('缺少参数: API');
