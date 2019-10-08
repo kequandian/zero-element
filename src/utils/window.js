@@ -2,7 +2,11 @@
 const handler = {
   get: function (target, name) {
     if (checkEnv()) {
-      return window[name];
+      const v = window[name];
+      if (typeof v === 'function') {
+        return v.bind(window);
+      }
+      return v;
     } else {
       return _ => void 0;
     }
