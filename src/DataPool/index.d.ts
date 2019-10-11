@@ -26,7 +26,7 @@ class DataPool {
    * 获取 window.location 的 search, 支持 hash 路由
    *
    */
-  getLocationSearch(): Object | string
+  getLocationSearch(): Object
 
   /**
    * 获取 window.location 的 pathname, 不支持 hash 路由

@@ -7,15 +7,21 @@ import global from 'zero-element-global/lib/global';
 
 export default function Reader(props) {
   const { namespace, config = {}, ...restProps } = props;
-  const { hotConfig = [] } = window.ZEle || {};
-
-  const pathname = getDataPool(namespace).getLocationPathname();
+  const { remoteConfig = {} } = window.ZEle || {};
 
   const [canConfig, setCanConfig] = useState(_ => {
     const { removeConfig = true } = global;
-    const matchItem = hotConfig.find(item => item.path === pathname);
+    const dataPool = getDataPool(namespace);
+    const pathname = dataPool.getLocationPathname();
+    const searchData = dataPool.getLocationSearch();
+    const matchItem = remoteConfig[pathname];
 
     if (removeConfig && matchItem) {
+      const { search } = matchItem;
+      if (search && Array.isArray(search)) {
+        const rst = search.every(key => searchData[key] !== undefined);
+        if (!rst) return config;
+      }
       getRemoteConfig(matchItem);
       return {
         layout: 'Loading',
@@ -25,9 +31,9 @@ export default function Reader(props) {
     }
   });
 
-  function getRemoteConfig(item) {
-    console.log(`页面 ${pathname} 使用了远端配置文件`);
-    query(item.target).then(({ status, data }) => {
+  function getRemoteConfig({ target, path }) {
+    console.log(`页面 ${path} 使用了远端配置文件`);
+    query(target).then(({ status, data }) => {
       if (status === 200) {
         if (data.code) {
           if (data.code === 200) {
@@ -40,7 +46,7 @@ export default function Reader(props) {
         }
       }
       setCanConfig(config);
-      console.warn(`页面 ${pathname} 未能正常获取远端配置文件`);
+      console.warn(`页面 ${path} 未能正常获取远端配置文件`);
     })
   }
 
