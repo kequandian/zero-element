@@ -8,6 +8,10 @@ function getSearch(location) {
     return location.hash.split('?')[1] || '';
   }
 }
+function getPathname(location) {
+  return location.pathname;
+}
+
 export default class DataPool {
   constructor({ namespace }) {
     this.namespace = namespace;
@@ -26,6 +30,13 @@ export default class DataPool {
       return qs.parse(getSearch(location));
     }
     return {};
+  }
+  getLocationPathname() {
+    const { location = {} } = window;
+    if (location) {
+      return getPathname(location);
+    }
+    return '';
   }
   setLocation() {
     this.location = this.getLocationSearch();

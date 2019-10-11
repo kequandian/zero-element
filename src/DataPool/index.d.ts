@@ -21,6 +21,18 @@ class DataPool {
    *
    */
   setLocation(): void
+
+  /**
+   * 获取 window.location 的 search, 支持 hash 路由
+   *
+   */
+  getLocationSearch(): Object | string
+
+  /**
+   * 获取 window.location 的 pathname, 不支持 hash 路由
+   *
+   */
+  getLocationPathname(): string
 }
 
 /**
@@ -28,7 +40,7 @@ class DataPool {
   *
   * @param {String} namespace namespace
   */
- declare function destroyDataPool(namespace: String): void
+declare function destroyDataPool(namespace: String): void
 
 export {
   getDataPool,

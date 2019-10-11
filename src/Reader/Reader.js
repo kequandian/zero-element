@@ -1,13 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UseLayout, UseItem } from './utils/readConfig';
+import { getDataPool } from '@/DataPool';
+import { query } from '@/utils/request';
+import global from 'zero-element-global/lib/global';
 
 
 export default function Reader(props) {
   const { namespace, config = {}, ...restProps } = props;
+  const { hotConfig = [] } = window.ZEle || {};
+
+  const pathname = getDataPool(namespace).getLocationPathname();
+
+  const [canConfig, setCanConfig] = useState(_ => {
+    const { removeConfig = true } = global;
+    const matchItem = hotConfig.find(item => item.path === pathname);
+
+    if (removeConfig && matchItem) {
+      getRemoteConfig(matchItem);
+      return {
+        layout: 'Loading',
+      };
+    } else {
+      return config;
+    }
+  });
+
+  function getRemoteConfig(item) {
+    console.log(`页面 ${pathname} 使用了远端配置文件`);
+    query(item.target).then(({ status, data }) => {
+      if (status === 200) {
+        if (data.code) {
+          if (data.code === 200) {
+            setCanConfig(data.data);
+            return false;
+          }
+        } else {
+          setCanConfig(data);
+          return false;
+        }
+      }
+      setCanConfig(config);
+      console.warn(`页面 ${pathname} 未能正常获取远端配置文件`);
+    })
+  }
 
   return (
-    <UseLayout n={config.layout} title={config.title} {...(config.config || {})}>
-      {config.items && config.items.map((itemCfg, i) =>
+    <UseLayout n={canConfig.layout}
+      title={canConfig.title}
+      {...(canConfig.config || {})}
+    >
+      {canConfig.items && canConfig.items.map((itemCfg, i) =>
         <UseItem key={i}
           config={itemCfg}
           namespace={itemCfg.namespace || namespace}

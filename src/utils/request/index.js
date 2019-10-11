@@ -3,13 +3,17 @@ import request, { error } from './axios';
 import { get as getEndpoint } from './endpoint';
 import { getToken } from './token';
 
+function canEndPoint(api) {
+  return api.indexOf('http') === -1 ? getEndpoint() : undefined
+}
+
 export async function query(api, params = {}) {
   return request.get(api, {
     params: {
       _t: new Date().getTime(),
       ...params,
     },
-    baseURL: getEndpoint(),
+    baseURL: canEndPoint(api),
     paramsSerializer: function (params) {
       return qs.stringify(params, { arrayFormat: 'repeat' });
     },
@@ -20,7 +24,7 @@ export async function query(api, params = {}) {
 }
 export async function post(api, data = {}) {
   return request.post(api, data, {
-    baseURL: getEndpoint(),
+    baseURL: canEndPoint(api),
     headers: {
       'Authorization': "Bearer " + getToken(),
     }
@@ -28,7 +32,7 @@ export async function post(api, data = {}) {
 }
 export async function update(api, data = {}) {
   return request.put(api, data, {
-    baseURL: getEndpoint(),
+    baseURL: canEndPoint(api),
     headers: {
       'Authorization': "Bearer " + getToken(),
     },
@@ -36,7 +40,7 @@ export async function update(api, data = {}) {
 }
 export async function remove(api) {
   return request.delete(api, {
-    baseURL: getEndpoint(),
+    baseURL: canEndPoint(api),
     headers: {
       'Authorization': "Bearer " + getToken(),
     },
@@ -46,7 +50,7 @@ export async function download(api, { method = 'get', fileName }) {
   return request({
     url: api,
     method,
-    baseURL: getEndpoint(),
+    baseURL: canEndPoint(api),
     responseType: 'blob',
     headers: {
       'Authorization': "Bearer " + getToken(),
