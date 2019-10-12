@@ -16,16 +16,18 @@ export default function Reader(props) {
     const searchData = dataPool.getLocationSearch();
     const matchItem = remoteConfig[pathname];
 
-    if (removeConfig && matchItem) {
-      const { search } = matchItem;
-      if (search && Array.isArray(search)) {
-        const rst = search.every(key => searchData[key] !== undefined);
-        if (!rst) return config;
+    if (process.env.NODE_ENV === 'production') {
+      if (removeConfig && matchItem) {
+        const { search } = matchItem;
+        if (search && Array.isArray(search)) {
+          const rst = search.every(key => searchData[key] !== undefined);
+          if (!rst) return config;
+        }
+        getRemoteConfig(matchItem);
+        return {
+          layout: 'Loading',
+        };
       }
-      getRemoteConfig(matchItem);
-      return {
-        layout: 'Loading',
-      };
     } else {
       return config;
     }
@@ -45,9 +47,15 @@ export default function Reader(props) {
           return false;
         }
       }
-      setCanConfig(config);
-      console.warn(`页面 ${path} 未能正常获取远端配置文件`);
+      throw new Error('网络错误');
     })
+      .catch(e => {
+        if (e.message) {
+          console.warn(e.message);
+        }
+        console.warn(`页面 ${path} 未能正常获取远端配置文件`);
+        setCanConfig(config);
+      })
   }
 
   return (
