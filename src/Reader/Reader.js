@@ -28,9 +28,8 @@ export default function Reader(props) {
           layout: 'Loading',
         };
       }
-    } else {
-      return config;
     }
+    return config;
   });
 
   function getRemoteConfig({ target, path }) {
@@ -56,6 +55,10 @@ export default function Reader(props) {
         console.warn(`页面 ${path} 未能正常获取远端配置文件`);
         setCanConfig(config);
       })
+  }
+
+  if (typeof canConfig !== 'object') {
+    throw new Error('canConfig is invalid');
   }
 
   return (
