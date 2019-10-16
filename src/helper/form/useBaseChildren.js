@@ -54,11 +54,33 @@ export default function useBaseChildren({
     console.warn('TODO', api);
   }
 
+  /**
+   * 添加单个子项
+   * @param {object} data 
+   */
   function onCreate(data) {
+    if (Object.keys(data).length === 0) return false;
     itemsData.push({
       ...data,
       '_id': idRef.current++,
     });
+    dispatch({
+      type: 'save',
+      payload: {
+        ...modelStatus,
+        [modelPath]: {
+          [itemsPath]: itemsData,
+        },
+      }
+    });
+  }
+  /**
+   * 添加多个子项
+   * @param {array} data 
+   */
+  function onCreateList(data) {
+    if (!Array.isArray(data)) return false;
+    itemsData.push(...data);
     dispatch({
       type: 'save',
       payload: {
@@ -111,6 +133,7 @@ export default function useBaseChildren({
     handle: {
       onGetList,
       onCreate,
+      onCreateList,
       onEdit,
       onRemoveChild,
     }
