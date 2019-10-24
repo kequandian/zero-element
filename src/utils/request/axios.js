@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { get } from 'zero-element-global/lib/APIConfig';
 import global from 'zero-element-global/lib/global';
+import JSONbig from 'json-bigint';
 // import { getToken } from './token';
+
+const JSONbigString = JSONbig({ storeAsString: true });
 
 const instance = axios.create({
   baseURL: get('endpoint'),
@@ -9,7 +12,12 @@ const instance = axios.create({
     'Accept': 'application/json',
     'Content-Type': 'application/json',
     // 'Authorization': "Bearer " + getToken(),
-  }
+  },
+  transformResponse: [
+    function formatJSONBig(data) {
+      return JSONbigString.parse(data);
+    }
+  ],
 });
 
 function error(err) {
@@ -21,13 +29,13 @@ function error(err) {
       Unauthorized(err.response);
     }
     console.warn('请求错误', err.response.status, err.response);
-    if(typeof RequestError === 'function') {
+    if (typeof RequestError === 'function') {
       RequestError(err.response);
     }
   } else {
     // 意料外错误
     console.warn('Error', err.message);
-    if(typeof RequestError === 'function') {
+    if (typeof RequestError === 'function') {
       RequestError(err.message);
     }
   }
