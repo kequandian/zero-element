@@ -21,8 +21,14 @@ export default function useBaseForm({
     namespace,
     data: extraData,
   });
+  const loading = modelStatus.load.effects['fetchOne'] || modelStatus.load.effects['createForm'] || modelStatus.load.effects['updateForm'] || false;
 
   function onGetOne({ }) {
+
+    if (loading) {
+      return Promise.reject();
+    }
+
     const api = fAPI.getAPI;
     return PromiseAPI(api, () => (
       dispatch({
@@ -37,6 +43,11 @@ export default function useBaseForm({
   }
 
   function onCreateForm({ fields }) {
+
+    if (loading) {
+      return Promise.reject();
+    }
+
     const api = fAPI.createAPI;
     return PromiseAPI(api, () => (
       dispatch({
@@ -54,8 +65,12 @@ export default function useBaseForm({
   }
 
   function onUpdateForm({ fields }) {
-    const api = fAPI.updateAPI;
 
+    if (loading) {
+      return Promise.reject();
+    }
+
+    const api = fAPI.updateAPI;
     return PromiseAPI(api, () => (
       dispatch({
         type: 'updateForm',
@@ -80,7 +95,7 @@ export default function useBaseForm({
   }
 
   return {
-    loading: modelStatus.load.effects['fetchOne'] || modelStatus.load.effects['createForm'] || modelStatus.load.effects['updateForm'] || false,
+    loading,
     config,
     data: formData,
     modelStatus,

@@ -31,6 +31,7 @@ export default function useBaseList({
     namespace,
     data: extraData,
   });
+  const loading = modelStatus.load.effects['fetchList'] || false;
 
   useWillMount(_ => {
     if (share) {
@@ -46,6 +47,11 @@ export default function useBaseList({
     pageSize = get('DEFAULT_pageSize'),
     queryData = {}
   }) {
+
+    if (loading) {
+      return Promise.reject();
+    }
+
     const api = fAPI.current.listAPI;
     return PromiseAPI(api, () => (
       dispatch({
@@ -97,7 +103,7 @@ export default function useBaseList({
   }
 
   return {
-    loading: modelStatus.load.effects['fetchList'] || false,
+    loading,
     config,
     data: records,
     modelStatus,

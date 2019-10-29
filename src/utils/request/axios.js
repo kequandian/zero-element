@@ -14,8 +14,11 @@ const instance = axios.create({
     // 'Authorization': "Bearer " + getToken(),
   },
   transformResponse: [
-    function formatJSONBig(data) {
-      return JSONbigString.parse(data);
+    function formatJSONBig(data, headers) {
+      if (headers['content-type'].indexOf('application/json') > -1) {
+        return JSONbigString.parse(data);
+      }
+      return data;
     }
   ],
 });
