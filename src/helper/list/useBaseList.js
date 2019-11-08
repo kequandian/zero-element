@@ -24,7 +24,7 @@ export default function useBaseList({
   const context = useContext(PageContext);
 
   const listData = modelStatus[modelPath] || {};
-  const { current, pageSize, records = [] } = listData;
+  const { current, pageSize, records } = listData;
 
   const fAPI = useRef();
   fAPI.current = formatAPI(API, {

@@ -67,8 +67,8 @@ export default function useBaseChildren({
     dispatch({
       type: 'save',
       payload: {
-        ...modelStatus,
         [modelPath]: {
+          ...formData,
           [itemsPath]: itemsData,
         },
       }
@@ -84,8 +84,8 @@ export default function useBaseChildren({
     dispatch({
       type: 'save',
       payload: {
-        ...modelStatus,
         [modelPath]: {
+          ...formData,
           [itemsPath]: itemsData,
         },
       }
@@ -96,8 +96,8 @@ export default function useBaseChildren({
     dispatch({
       type: 'save',
       payload: {
-        ...modelStatus,
         [modelPath]: {
+          ...formData,
           [itemsPath]: itemsData,
         },
       }
@@ -114,10 +114,10 @@ export default function useBaseChildren({
     });
 
     dispatch({
-      type: 'saveData',
+      type: 'save',
       payload: {
-        key: modelPath,
-        data: {
+        [modelPath]: {
+          ...formData,
           [itemsPath]: temp,
         },
       }

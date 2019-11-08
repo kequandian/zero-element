@@ -37,7 +37,9 @@ function createModel({ namespace, state = {}, reducers = {}, effects = {}, auto 
   models[namespace] = new Model({
     namespace,
     state: {
-      listData: {},
+      listData: {
+        records: [],
+      },
       formData: {},
       searchData: {},
       load: {
