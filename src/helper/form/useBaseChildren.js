@@ -104,21 +104,26 @@ export default function useBaseChildren({
     });
   }
 
+  // 是通过对原 Array 直接修改，故不能用 filter 等返回新 Array 的方式来实现
   function onRemoveChild({ record, options = {} }) {
 
-    const temp = itemsData.filter(item => {
+    const index = itemsData.findIndex(item => {
       if (item._id !== undefined) {
-        return item._id !== record._id;
+        return item._id === record._id;
       }
-      return item.id !== record.id;
+      return item.id === record.id;
     });
+
+    if (index > -1) {
+      itemsData.splice(index, 1);
+    }
 
     dispatch({
       type: 'save',
       payload: {
         [modelPath]: {
           ...formData,
-          [itemsPath]: temp,
+          [itemsPath]: itemsData,
         },
       }
     });
