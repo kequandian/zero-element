@@ -8,7 +8,7 @@ export default function useBaseSearch({
 }, config) {
 
   const { share } = config;
-  const [shareData] = useShare({
+  const [shareData, setShare] = useShare({
     share,
   });
   const [modelStatus, dispatch] = useModel({
@@ -19,13 +19,20 @@ export default function useBaseSearch({
 
   const searchData = modelStatus[modelPath] || {};
 
-  function onSearch(options) {
-    const { onGetList } = shareData;
+  function onSearch(queryData) {
+    const { current, pageSize, onGetList } = shareData;
     if (onGetList) {
-      onGetList(options);
+      onGetList({
+        current,
+        pageSize,
+        queryData,
+      });
     } else {
       console.warn(`请在 conifg 中使用 share 来绑定需要刷新的 Table`);
     }
+    setShare({
+      queryData: queryData || {},
+    });
   }
 
   function onClearSearch() {

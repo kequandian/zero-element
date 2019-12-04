@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useEffect } from 'react';
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from 'zero-element-global/lib/APIConfig';
@@ -13,7 +13,7 @@ export default function useBaseList({
 }, config) {
 
   const { API = {}, share } = config;
-  const [, setShare, destroyShare] = useShare({
+  const [shareData, setShare, destroyShare] = useShare({
     share,
   });
 
@@ -23,7 +23,7 @@ export default function useBaseList({
   });
   const context = useContext(PageContext);
 
-  const listData = modelStatus[modelPath] || {};
+  const listData = modelStatus[modelPath];
   const { current, pageSize, records } = listData;
 
   const fAPI = useRef();
@@ -40,6 +40,18 @@ export default function useBaseList({
       });
     }
   });
+
+  useEffect(_ => {
+    if (share) {
+      const { current, pageSize } = listData;
+      setShare({
+        current,
+        pageSize,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [share, listData]);
+
   useWillUnmount(() => destroyShare('onGetList'));
 
   function onGetList({
@@ -47,6 +59,7 @@ export default function useBaseList({
     pageSize = get('DEFAULT_pageSize'),
     queryData = {}
   }) {
+    const { queryData: qD } = shareData;
 
     if (loading) {
       return Promise.reject();
@@ -60,6 +73,7 @@ export default function useBaseList({
         MODELPATH: modelPath,
         DIRECTRETURN: false,
         payload: {
+          ...qD,
           ...queryData,
           [get('REQUEST_FIELD_current')]: current,
           [get('REQUEST_FIELD_pageSize')]: pageSize,
