@@ -2,13 +2,14 @@ import { useContext } from 'react';
 import { useModel } from '@/Model';
 import PageContext from '@/context/PageContext';
 import useShare from '@/utils/hooks/useShare';
+import { useWillUnmount } from '@/utils/hooks/lifeCycle';
 
 export default function useBaseSearch({
   namespace, modelPath = 'searchData'
 }, config) {
 
   const { share } = config;
-  const [shareData, setShare] = useShare({
+  const [shareData, setShare, destroyShare] = useShare({
     share,
   });
   const [modelStatus, dispatch] = useModel({
@@ -16,6 +17,8 @@ export default function useBaseSearch({
     type: 'useBaseSearch',
   });
   const context = useContext(PageContext);
+
+  useWillUnmount(() => destroyShare('queryData'));
 
   const searchData = modelStatus[modelPath] || {};
 

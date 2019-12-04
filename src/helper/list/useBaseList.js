@@ -52,7 +52,11 @@ export default function useBaseList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [share, listData]);
 
-  useWillUnmount(() => destroyShare('onGetList'));
+  useWillUnmount(() => destroyShare([
+    'onGetList',
+    'current',
+    'pageSize',
+  ]));
 
   function onGetList({
     current = get('DEFAULT_current'),
