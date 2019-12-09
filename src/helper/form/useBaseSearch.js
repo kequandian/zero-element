@@ -33,6 +33,11 @@ export default function useBaseSearch({
     } else {
       console.warn(`请在 conifg 中使用 share 来绑定需要刷新的 Table`);
     }
+
+    onSetSearchData(queryData);
+  }
+
+  function onSetSearchData(queryData = {}) {
     setShare({
       queryData: queryData || {},
     });
@@ -56,6 +61,7 @@ export default function useBaseSearch({
     dispatch,
     handle: {
       onSearch,
+      onSetSearchData,
       onClearSearch,
     }
   }
