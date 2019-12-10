@@ -9,8 +9,8 @@ const JSONbigString = JSONbig({ storeAsString: true });
 const instance = axios.create({
   baseURL: get('endpoint'),
   headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
+    'Accept': 'application/json;charset=utf-8',
+    'Content-Type': 'application/json;charset=utf-8',
     // 'Authorization': "Bearer " + getToken(),
   },
   transformResponse: [
