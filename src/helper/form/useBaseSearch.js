@@ -26,7 +26,7 @@ export default function useBaseSearch({
     const { current, pageSize, onGetList } = shareData;
     if (onGetList) {
       onGetList({
-        current,
+        current: 1,
         pageSize,
         queryData,
       });
