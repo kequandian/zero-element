@@ -4,16 +4,34 @@ export function getToken() {
   return SS.get('token') || LS.get('token');
 }
 
-export function saveToken({ account, token, avatar, permissions, remember }) {
+export function saveToken({ userName, token, avatar, permissions, remember }) {
   if (remember) {
-    LS.set('token', token);
-    LS.set('permissions', permissions);
-    LS.set('avatar', avatar);
+    if (token) {
+      LS.set('token', token);
+    }
+    if (permissions) {
+      LS.set('permissions', permissions);
+    }
+    if (avatar) {
+      LS.set('avatar', avatar);
+    }
+    if (userName) {
+      LS.set('userName', userName);
+    }
   }
   else {
-    SS.set('token', token);
-    SS.set('permissions', permissions);
-    SS.set('avatar', avatar);
+    if (token) {
+      SS.set('token', token);
+    }
+    if (permissions) {
+      SS.set('permissions', permissions);
+    }
+    if (avatar) {
+      SS.set('avatar', avatar);
+    }
+    if (userName) {
+      SS.set('userName', userName);
+    }
   }
 }
 
@@ -72,4 +90,8 @@ export function setAvatar(avatar) {
 
 export function getAvatar() {
   return SS.get('avatar') || LS.get('avatar');
+}
+
+export function getUserName() {
+  return SS.get('userName') || LS.get('userName');
 }
