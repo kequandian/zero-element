@@ -46,6 +46,25 @@ export async function remove(api) {
     },
   }).catch(error);
 }
+export async function upload(api, data) {
+  let bodyData = undefined;
+  if (!(data instanceof FormData)) {
+    bodyData = new FormData();
+    Object.keys(data).forEach(key => {
+      bodyData.append(key, data[key]);
+    });
+  } else {
+    bodyData = data;
+  }
+
+  return request.post(api, bodyData, {
+    baseURL: canEndPoint(api),
+    headers: {
+      'Authorization': "Bearer " + getToken(),
+      'Content-Type': undefined,
+    }
+  }).catch(error);
+}
 export async function download(api, { method = 'get', fileName }) {
   return request({
     url: api,
