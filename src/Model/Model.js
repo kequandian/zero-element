@@ -27,7 +27,7 @@ export default class Model {
         this.queue = this.queue.filter(item => item.symbol !== symbol);
       };
     });
-    return [this.getState(), this.dispatch.bind(this)];
+    return [this.getState(), this.dispatch.bind(this), this.canRecyclable.bind(this)];
   }
   getState() {
     return this.state;
@@ -95,4 +95,9 @@ export default class Model {
 
     console.warn(`未定义的方法: ${type}`);
   }
+
+  canRecyclable() {
+    this.recyclable = true;
+  }
+
 }

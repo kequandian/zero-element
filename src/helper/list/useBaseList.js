@@ -17,7 +17,7 @@ export default function useBaseList({
     share,
   });
 
-  const [modelStatus, dispatch] = useModel({
+  const [modelStatus, dispatch, onCanRecyclable] = useModel({
     namespace,
     type: 'useBaseList',
   });
@@ -132,6 +132,8 @@ export default function useBaseList({
       onRefresh,
       onDelete,
       onClearList,
+
+      onCanRecyclable,
     }
   }
 }

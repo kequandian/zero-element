@@ -10,7 +10,7 @@ export default function useBaseForm({
 }, config) {
 
   const { API = {} } = config;
-  const [modelStatus, dispatch] = useModel({
+  const [modelStatus, dispatch, onCanRecyclable] = useModel({
     namespace,
     type: 'useBaseForm',
   });
@@ -106,6 +106,8 @@ export default function useBaseForm({
       onCreateForm,
       onUpdateForm,
       onClearForm,
+
+      onCanRecyclable,
     }
   }
 }

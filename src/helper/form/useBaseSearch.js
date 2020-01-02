@@ -12,7 +12,7 @@ export default function useBaseSearch({
   const [shareData, setShare, destroyShare] = useShare({
     share,
   });
-  const [modelStatus, dispatch] = useModel({
+  const [modelStatus, dispatch, onCanRecyclable] = useModel({
     namespace,
     type: 'useBaseSearch',
   });
@@ -63,6 +63,8 @@ export default function useBaseSearch({
       onSearch,
       onSetSearchData,
       onClearSearch,
+
+      onCanRecyclable,
     }
   }
 }
