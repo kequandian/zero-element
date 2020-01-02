@@ -2,11 +2,11 @@ import Model from './Model';
 import defaultEffects from './defaultEffects';
 
 const models = {};
-let prevModels;
+let prevModels = '';
 
 function checkDispatch(options) {
   if (typeof options === 'object') {
-    const { dispatch, modelStatus, namespace } = options;
+    const { dispatch, modelStatus, namespace = 'defaultName' } = options;
     if (dispatch && typeof dispatch === 'function') {
       return [
         modelStatus,
@@ -26,17 +26,17 @@ function checkDispatch(options) {
   }
 }
 
-function getModel({ namespace, ...rest }) {
+function getModel({ namespace = 'defaultName', ...rest }) {
   checkModel(namespace);
   prevModels = namespace;
   return models[namespace].useModel(rest);
 }
-function getModelEntity(namespace) {
+function getModelEntity(namespace = 'defaultName') {
   checkModel(namespace);
   return models[namespace].getModel();
 }
 
-function checkModel(namespace) {
+function checkModel(namespace = 'defaultName') {
   if (!models[namespace]) {
     createModel({ namespace, auto: true });
     console.log('auto create model: ', namespace, models);
