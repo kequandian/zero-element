@@ -6,7 +6,11 @@
  * - {id} 从 model 中替换 id 的值
  * - <id> 从传入的 data 中替换 id 的值
  */
-export default function replaceKey({ model, dataPool, data = {} }) {
+export default function replaceKey({ model, dataPool, data = {}, placeholder }) {
+  function handleReplace(str, key, value = placeholder) {
+    return str.replace(key, value);
+  }
+
   return {
     format: function format(string) {
       if (!string) {
@@ -22,19 +26,19 @@ export default function replaceKey({ model, dataPool, data = {} }) {
 
         keyList && keyList.forEach(key => {
           if (key.indexOf('[') > -1) {
-            string = string.replace(key,
+            string = handleReplace(string, key,
               dataPool.getLocationSearch()[key.replace(/\[|\]/g, '')]
             );
           } else if (key.indexOf('(') > -1) {
-            string = string.replace(key,
+            string = handleReplace(string, key,
               getDeepValue(dataPool.record, key.replace(/\(|\)/g, ''))
             );
           } else if (key.indexOf('{') > -1) {
-            string = string.replace(key,
+            string = handleReplace(string, key,
               getDeepValue(model.state.formData, key.replace(/\{|\}/g, ''))
             );
           } else if (key.indexOf('<') > -1) {
-            string = string.replace(key,
+            string = handleReplace(string, key,
               getDeepValue(data, key.replace(/\<|\>/g, ''))
             );
           }

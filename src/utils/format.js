@@ -2,7 +2,7 @@ import { getModel } from '@/Model';
 import { getDataPool } from '@/DataPool';
 import replaceKey from './replaceKey';
 
-export function formatAPI(API, { namespace, data }) {
+export function formatAPI(API, { namespace, data, placeholder = 'undefined' }) {
   const model = getModel(namespace);
   const dataPool = getDataPool(namespace);
 
@@ -10,6 +10,7 @@ export function formatAPI(API, { namespace, data }) {
     model,
     dataPool,
     data,
+    placeholder,
   });
 
   if (typeof API === 'string') {
