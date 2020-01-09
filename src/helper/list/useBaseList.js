@@ -61,9 +61,24 @@ export default function useBaseList({
   function onGetList({
     current = get('DEFAULT_current'),
     pageSize = get('DEFAULT_pageSize'),
-    queryData = {}
+    queryData = {},
+    sorter = {},
   }) {
     const { queryData: qD } = shareData;
+    const { field, order } = sorter;
+    const payload = {
+      ...qD,
+      ...queryData,
+      [get('REQUEST_FIELD_current')]: current,
+      [get('REQUEST_FIELD_pageSize')]: pageSize,
+    };
+
+    if (field && order) {
+      payload[get('REQUEST_FIELD_field')] = field;
+      payload[get('REQUEST_FIELD_order')] = order === 'ascend' ?
+        get('REQUEST_FIELD_ascend')
+        : get('REQUEST_FIELD_descend');
+    }
 
     if (loading) {
       return Promise.reject();
@@ -76,12 +91,7 @@ export default function useBaseList({
         API: api,
         MODELPATH: modelPath,
         DIRECTRETURN: false,
-        payload: {
-          ...qD,
-          ...queryData,
-          [get('REQUEST_FIELD_current')]: current,
-          [get('REQUEST_FIELD_pageSize')]: pageSize,
-        },
+        payload: payload,
       })
     )
     );

@@ -8,6 +8,12 @@ import Zele from '@/ZEle';
 
 //   'REQUEST_FIELD_current': 'pageNumber',
 //   'REQUEST_FIELD_pageSize': 'pageSize',
+
+//   'REQUEST_FIELD_field': 'field', // api 排序的字段
+//   'REQUEST_FIELD_order': 'order', // api 排序的方式
+//   'REQUEST_FIELD_ascend': 'ascend', // api 排序方式的 ascend 映射
+//   'REQUEST_FIELD_descend': 'descend', // api 排序方式的 descend 映射
+
 //   'REQUEST_FIELD_total': 'total', // 预留字段
 //   'REQUEST_FIELD_records': 'records', // 预留字段
 //   'REQUEST_FIELD_PID': 'pid', // 预留字段
