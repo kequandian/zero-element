@@ -17,6 +17,9 @@ function checkDispatch(options) {
       // 销毁可回收的 model
       if (namespace !== prevModels && models[prevModels]) {
         if (checkParent(namespace, prevModels) === false && models[prevModels].recyclable === true) {
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`创建了新的 model ${namespace}, 回收 model ${prevModels}`);
+          }
           removeModel(prevModels);
         }
       }
@@ -39,7 +42,9 @@ function getModelEntity(namespace = 'defaultName') {
 function checkModel(namespace = 'defaultName') {
   if (!models[namespace]) {
     createModel({ namespace, auto: true });
-    console.log('auto create model: ', namespace, models);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('auto create model: ', namespace, models);
+    }
   }
 }
 

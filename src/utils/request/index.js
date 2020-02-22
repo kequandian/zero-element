@@ -1,4 +1,3 @@
-import qs from 'qs';
 import request, { error } from './axios';
 import { get as getEndpoint } from './endpoint';
 import { getToken } from './token';
@@ -14,9 +13,6 @@ export async function query(api, params = {}) {
       ...params,
     },
     baseURL: canEndPoint(api),
-    paramsSerializer: function (params) {
-      return qs.stringify(params, { arrayFormat: 'repeat' });
-    },
     headers: {
       'Authorization': "Bearer " + getToken(),
     },
@@ -65,7 +61,7 @@ export async function upload(api, data) {
     }
   }).catch(error);
 }
-export async function download(api, { method = 'get', fileName }) {
+export async function download(api, { method = 'get', fileName }, data) {
   return request({
     url: api,
     method,
@@ -74,6 +70,8 @@ export async function download(api, { method = 'get', fileName }) {
     headers: {
       'Authorization': "Bearer " + getToken(),
     },
+    params: method === 'get' ? data : undefined,
+    data: method !== 'get' ? data : undefined,
   })
     .then(res => downloadFile(res, fileName))
     .catch(error);
@@ -84,7 +82,7 @@ function downloadFile(res, defaultName = 'file') {
     return Promise.reject('api 未返回文件数据流');
   } else {
     const disposition = res.headers['content-disposition'] || '';
-    const matchRst = disposition.match(/filename="(\S+)"/i);
+    const matchRst = disposition.match(/filename=(\S+)/i);
     const fileName = matchRst && matchRst[1] || defaultName;
 
     const blob = new Blob([res.data]);

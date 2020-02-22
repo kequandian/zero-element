@@ -1,3 +1,4 @@
+import qs from 'qs';
 import axios from 'axios';
 import { get } from 'zero-element-global/lib/APIConfig';
 import global from 'zero-element-global/lib/global';
@@ -12,6 +13,9 @@ const instance = axios.create({
     'Accept': 'application/json;charset=utf-8',
     'Content-Type': 'application/json;charset=utf-8',
     // 'Authorization': "Bearer " + getToken(),
+  },
+  paramsSerializer: function (params) {
+    return qs.stringify(params, { arrayFormat: 'repeat' });
   },
   transformResponse: [
     function formatJSONBig(data, headers) {
