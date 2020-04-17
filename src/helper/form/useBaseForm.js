@@ -42,7 +42,7 @@ export default function useBaseForm({
     );
   }
 
-  function onCreateForm({ fields }) {
+  function onCreateForm({ fields, options }) {
 
     if (loading) {
       return Promise.reject();
@@ -54,6 +54,7 @@ export default function useBaseForm({
         type: 'createForm',
         API: api,
         MODELPATH: modelPath,
+        options, // request options
         payload: {
           ...formData,
           ...fields, // 用户输入优先
@@ -64,7 +65,7 @@ export default function useBaseForm({
 
   }
 
-  function onUpdateForm({ fields }) {
+  function onUpdateForm({ fields, options }) {
 
     if (loading) {
       return Promise.reject();
@@ -76,6 +77,7 @@ export default function useBaseForm({
         type: 'updateForm',
         API: api,
         MODELPATH: modelPath,
+        options, // request options
         payload: {
           ...formData,
           ...fields, // 用户输入优先

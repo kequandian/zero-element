@@ -83,9 +83,10 @@ async function fetchOne({ API, payload, DIRECTRETURN, MODELPATH }, { put }) {
   return result;
 }
 
-async function createForm({ API, payload }, { put }) {
+async function createForm({ API, payload, options }, { put }) {
   console.log("createForm to :", API);
-  const { data: result } = await post(API, payload);
+  // 如果是下载的 response, 那就使用默认值 { data: {code: 200} }
+  const { data: result } = await post(API, payload, options) || { data: { code: 200 } };
 
   if (result && result.code === 200) {
     console.log('添加数据成功');
@@ -93,9 +94,10 @@ async function createForm({ API, payload }, { put }) {
   return result;
 }
 
-async function updateForm({ API, payload }, { put }) {
+async function updateForm({ API, payload, options }, { put }) {
   console.log("updateForm to :", API);
-  const { data: result } = await update(API, payload);
+  // 如果是下载的 response, 那就使用默认值 { data: {code: 200} }
+  const { data: result } = await update(API, payload, options) || { data: { code: 200 } };
 
   if (result && result.code === 200) {
     console.log('修改数据成功');

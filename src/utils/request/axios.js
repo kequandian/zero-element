@@ -9,6 +9,7 @@ const JSONbigString = JSONbig({ storeAsString: true });
 
 const instance = axios.create({
   baseURL: get('endpoint'),
+  // withCredentials: true, // 加了之后，反而其它项目也会出现跨域问题
   headers: {
     'Accept': 'application/json;charset=utf-8',
     'Content-Type': 'application/json;charset=utf-8',
@@ -19,7 +20,9 @@ const instance = axios.create({
   },
   transformResponse: [
     function formatJSONBig(data, headers) {
-      if (headers['content-type'].indexOf('application/json') > -1) {
+      const contentType = headers['content-type'];
+
+      if (contentType && contentType.indexOf('application/json') > -1) {
         return JSONbigString.parse(data);
       }
       return data;

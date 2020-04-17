@@ -18,13 +18,16 @@ export async function query(api, params = {}) {
     },
   }).catch(error);
 }
-export async function post(api, data = {}) {
+export async function post(api, data = {}, options = {}) {
   return request.post(api, data, {
     baseURL: canEndPoint(api),
     headers: {
       'Authorization': "Bearer " + getToken(),
-    }
-  }).catch(error);
+    },
+    ...options,
+  })
+    .then(res => downloadFile(res))
+    .catch(error);
 }
 export async function update(api, data = {}) {
   return request.put(api, data, {
@@ -61,7 +64,9 @@ export async function upload(api, data) {
     }
   }).catch(error);
 }
-export async function download(api, { method = 'get', fileName }, data) {
+export async function download(api, options = {}, data) {
+  const { method = 'get', fileName } = options;
+
   return request({
     url: api,
     method,
@@ -78,12 +83,15 @@ export async function download(api, { method = 'get', fileName }, data) {
 }
 
 function downloadFile(res, defaultName = 'file') {
-  if (res.data.type === "application/json") {
-    return Promise.reject('api 未返回文件数据流');
+  const contentType = res.headers['content-type'];
+
+  if (contentType && contentType.indexOf('application/json') > -1) {
+    return Promise.resolve(res);
   } else {
     const disposition = res.headers['content-disposition'] || '';
-    const matchRst = disposition.match(/filename=(\S+)/i);
-    const fileName = matchRst && matchRst[1] || defaultName;
+    const matchRst = disposition.match(/filename=["]{0,1}([\w.@%]+)["]{0,1}/i);
+
+    const fileName = matchRst && decodeURI(matchRst[1]) || defaultName;
 
     const blob = new Blob([res.data]);
     if (window.navigator.msSaveOrOpenBlob) {
