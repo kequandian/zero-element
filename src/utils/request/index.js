@@ -82,16 +82,31 @@ export async function download(api, options = {}, data) {
     .catch(error);
 }
 
+export async function preview(api, options = {}, data) {
+  const { method = 'get', fileName } = options;
+
+  return request({
+    url: api,
+    method,
+    baseURL: canEndPoint(api),
+    responseType: 'blob',
+    headers: {
+      'Authorization': "Bearer " + getToken(),
+    },
+    params: method === 'get' ? data : undefined,
+    data: method !== 'get' ? data : undefined,
+  })
+    .then(res => previewFile(res, fileName))
+    .catch(error);
+}
+
 function downloadFile(res, defaultName = 'file') {
   const contentType = res.headers['content-type'];
 
   if (contentType && contentType.indexOf('application/json') > -1) {
     return Promise.resolve(res);
   } else {
-    const disposition = res.headers['content-disposition'] || '';
-    const matchRst = disposition.match(/filename=["]{0,1}([\w.@%]+)["]{0,1}/i);
-
-    const fileName = matchRst && decodeURI(matchRst[1]) || defaultName;
+    const fileName = getFileName(res, defaultName);
 
     const blob = new Blob([res.data]);
     if (window.navigator.msSaveOrOpenBlob) {
@@ -109,4 +124,32 @@ function downloadFile(res, defaultName = 'file') {
       window.URL.revokeObjectURL(link.href);
     }
   }
+}
+
+function previewFile(res) {
+  const contentType = res.headers['content-type'];
+
+  if (contentType && contentType.indexOf('application/json') > -1) {
+    return Promise.resolve(res);
+  } else {
+    const fileName = getFileName(res);
+
+    const blob = new Blob([res.data], { type: contentType });
+    if (window.navigator.msSaveOrOpenBlob) {
+      navigator.msSaveBlob(blob, fileName); //兼容ie10
+    } else {
+      const url = URL.createObjectURL(blob);
+
+      window.open(url, '_blank', '');
+    }
+  }
+}
+
+function getFileName(res, defaultName = '') {
+  const disposition = res.headers['content-disposition'] || '';
+  const matchRst = disposition.match(/filename=["]{0,1}([\w.@%-]+)["]{0,1}/i);
+
+  const fileName = matchRst && decodeURI(matchRst[1]) || defaultName;
+
+  return fileName;
 }

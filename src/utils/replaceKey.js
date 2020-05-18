@@ -1,3 +1,5 @@
+import win from "./window";
+
 /**
  *  API 参数化的具体实现
  * @param {object} {model, dataPool} model 和 dataPool
@@ -5,6 +7,7 @@
  * - (id) 从 dataPool.record 中替换 id 的值
  * - {id} 从 model 中替换 id 的值
  * - <id> 从传入的 data 中替换 id 的值
+ * - !#id#! 从 window.ZEle 中替换 id 的值
  */
 export default function replaceKey({ model, dataPool, data = {}, placeholder }) {
   function handleReplace(str, key, value = placeholder) {
@@ -22,7 +25,7 @@ export default function replaceKey({ model, dataPool, data = {}, placeholder }) 
       };
       if (typeof (string) === 'string') {
         const keyList =
-          string.match(/\{\w+(.\w+)*\}|\[\w+\]|\(\w+(.\w+)*\)|\<\w+(.\w+)*\>/g);
+          string.match(/\{\w+(.\w+)*\}|\[\w+\]|\(\w+(.\w+)*\)|\<\w+(.\w+)*\>|\!\#\w+(.\w+)*\#\!/g);
 
         keyList && keyList.forEach(key => {
           if (key.indexOf('[') > -1) {
@@ -40,6 +43,12 @@ export default function replaceKey({ model, dataPool, data = {}, placeholder }) 
           } else if (key.indexOf('<') > -1) {
             string = handleReplace(string, key,
               getDeepValue(data, key.replace(/\<|\>/g, ''))
+            );
+          } else if (key.indexOf('!#') > -1) {
+            const pureKey = key.replace(/\!\#|\#\!/g, '');
+
+            string = handleReplace(string, key,
+              win.ZEle[pureKey]
             );
           }
         });
