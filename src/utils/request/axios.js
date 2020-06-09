@@ -1,7 +1,7 @@
 import qs from 'qs';
 import axios from 'axios';
-import { get } from 'zero-element-global/lib/APIConfig';
-import global from 'zero-element-global/lib/global';
+import { get } from '@/config/APIConfig';
+import global from '@/config/global';
 import JSONbig from 'json-bigint';
 // import { getToken } from './token';
 

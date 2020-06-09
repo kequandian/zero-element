@@ -1,8 +1,8 @@
 import React from 'react';
 import { BaseEnter } from '../components/Animation';
 
-import { Render } from 'zero-element-global/lib/container';
-import { Render as RenderLayout } from 'zero-element-global/lib/layout';
+import { Render } from '@/config/container';
+import { Render as RenderLayout } from '@/config/layout';
 
 export function UseLayout(props) {
   const { n, ...restProps } = props;

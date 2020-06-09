@@ -1,6 +1,6 @@
 import Zele from '@/ZEle';
 
-// import { set as APIConfig } from 'zero-element-global/lib/APIConfig';
+// import { set as APIConfig } from '@/config/APIConfig';
 
 // APIConfig({
 //   'DEFAULT_current': 1,

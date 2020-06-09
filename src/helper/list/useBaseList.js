@@ -1,7 +1,7 @@
 import { useContext, useRef, useEffect } from 'react';
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
-import { get } from 'zero-element-global/lib/APIConfig';
+import { get } from '@/config/APIConfig';
 import { PromiseAPI } from '@/utils/PromiseGen';
 import PageContext from '@/context/PageContext';
 import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { UseLayout, UseItem } from './utils/readConfig';
 import { getDataPool } from '@/DataPool';
 import { query } from '@/utils/request';
-import global from 'zero-element-global/lib/global';
+import global from '@/config/global';
 
 
 export default function Reader(props) {

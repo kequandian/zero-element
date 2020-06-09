@@ -1,7 +1,7 @@
 import { useContext, useRef } from 'react';
 import { useModel, getModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
-import { get } from 'zero-element-global/lib/APIConfig';
+import { get } from '@/config/APIConfig';
 import PageContext from '@/context/PageContext';
 import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
 import useShare from '@/utils/hooks/useShare';

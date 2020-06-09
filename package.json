@@ -1,6 +1,6 @@
 {
   "name": "zero-element",
-  "version": "1.0.0-beta.51",
+  "version": "1.0.0-beta.52",
   "description": "基于 React 的后台页面快速开发框架",
   "main": "lib/index.js",
   "scripts": {
@@ -16,8 +16,7 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-motion": "^0.5.2",
-    "url-polyfill": "^1.0.10",
-    "zero-element-global": "github:kequandian/zero-element-global"
+    "url-polyfill": "^1.0.10"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
