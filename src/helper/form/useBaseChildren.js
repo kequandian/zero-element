@@ -1,33 +1,24 @@
-import { useContext, useRef } from 'react';
-import { useModel, getModel } from '@/Model';
+import { useRef } from 'react';
+import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from '@/config/APIConfig';
-import PageContext from '@/context/PageContext';
 import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
-import useShare from '@/utils/hooks/useShare';
 
 export default function useBaseChildren({
   namespace,
-  modelPath = 'formData',
   itemsPath = 'items',
   extraData,
 }, config) {
 
-  const { API = {}, share } = config;
+  const { API = {} } = config;
   const idRef = useRef(0);
-  const [, setShare, destroyShare] = useShare({
-    share,
-  });
 
-  const model = getModel(namespace);
-  const modelStatus = model.state;
-  const [, dispatch] = useModel({
+  const model = useModel({
     namespace,
     type: 'useBaseChildren',
   });
-  const context = useContext(PageContext);
 
-  const formData = modelStatus[modelPath];
+  const formData = model.formData;
 
   const itemsData = formData[itemsPath] || [];
 
@@ -37,13 +28,11 @@ export default function useBaseChildren({
   });
 
   useWillMount(_ => {
-    if (share) {
-      setShare({
-        onGetList,
-      });
-    }
+    model.setPageData('onGetChildrenList', onGetList);
   });
-  useWillUnmount(() => destroyShare('onGetList'));
+  useWillUnmount(() => {
+    model.setPageData('onGetChildrenList', undefined);
+  });
 
   function onGetList({
     current = get('DEFAULT_current'),
@@ -64,14 +53,9 @@ export default function useBaseChildren({
       ...data,
       '_id': idRef.current++,
     });
-    dispatch({
-      type: 'save',
-      payload: {
-        [modelPath]: {
-          ...formData,
-          [itemsPath]: itemsData,
-        },
-      }
+    model.save('formData', {
+      ...formData,
+      [itemsPath]: itemsData,
     });
   }
   /**
@@ -81,26 +65,16 @@ export default function useBaseChildren({
   function onCreateList(data) {
     if (!Array.isArray(data)) return false;
     itemsData.push(...data);
-    dispatch({
-      type: 'save',
-      payload: {
-        [modelPath]: {
-          ...formData,
-          [itemsPath]: itemsData,
-        },
-      }
+    model.save('formData', {
+      ...formData,
+      [itemsPath]: itemsData,
     });
   }
   function onEdit(index, data) {
     itemsData[index] = data;
-    dispatch({
-      type: 'save',
-      payload: {
-        [modelPath]: {
-          ...formData,
-          [itemsPath]: itemsData,
-        },
-      }
+    model.save('formData', {
+      ...formData,
+      [itemsPath]: itemsData,
     });
   }
 
@@ -118,23 +92,16 @@ export default function useBaseChildren({
       itemsData.splice(index, 1);
     }
 
-    dispatch({
-      type: 'save',
-      payload: {
-        [modelPath]: {
-          ...formData,
-          [itemsPath]: itemsData,
-        },
-      }
+    model.save('formData', {
+      ...formData,
+      [itemsPath]: itemsData,
     });
   }
 
   return {
     config,
     data: itemsData,
-    modelStatus,
-    context,
-    dispatch,
+    model,
     handle: {
       onGetList,
       onCreate,

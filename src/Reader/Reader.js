@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { UseLayout, UseItem } from './utils/readConfig';
-import { getDataPool } from '@/DataPool';
+import { getLocationPathname, getLocationSearch } from '@/utils/location';
 import { query } from '@/utils/request';
 import global from '@/config/global';
 
@@ -11,9 +11,8 @@ export default function Reader(props) {
 
   const [canConfig, setCanConfig] = useState(_ => {
     const { removeConfig = true } = global;
-    const dataPool = getDataPool(namespace);
-    const pathname = dataPool.getLocationPathname();
-    const searchData = dataPool.getLocationSearch();
+    const pathname = getLocationPathname();
+    const searchData = getLocationSearch();
     const matchItem = remoteConfig[pathname];
 
     if (process.env.NODE_ENV === 'production') {

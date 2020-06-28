@@ -1,42 +1,41 @@
-import Model from './Model';
+import { createStore } from 'iostore';
+import models from 'iostore/src/stores';
 import defaultEffects from './defaultEffects';
+import defaultState from './defaultState';
 
-const models = {};
 let prevModels = '';
 
-function checkDispatch(options) {
+function useModel(options) {
+  let data = options;
+
   if (typeof options === 'object') {
-    const { dispatch, modelStatus, namespace = 'defaultName' } = options;
-    if (dispatch && typeof dispatch === 'function') {
-      return [
-        modelStatus,
-        dispatch,
-      ];
-    } else {
+    const { namespace = 'defaultName' } = options;
 
-      // 销毁可回收的 model
-      if (namespace !== prevModels && models[prevModels]) {
-        if (checkParent(namespace, prevModels) === false && models[prevModels].recyclable === true) {
-          if (process.env.NODE_ENV === 'development') {
-            console.log(`创建了新的 model ${namespace}, 回收 model ${prevModels}`);
-          }
-          removeModel(prevModels);
+    // 销毁可回收的 model
+    if (namespace !== prevModels && models[prevModels]) {
+      if (checkParent(namespace, prevModels) === false && models[prevModels]._recyclable === true) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`创建了新的 model ${namespace}, 回收 model ${prevModels}`);
         }
+        removeModel(prevModels);
       }
-
-      return getModel(options);
     }
+
+  } else if (typeof options === 'string') {
+    data = {
+      namespace: options,
+    };
+  } else {
+    throw new Error('params namespace is required');
   }
+
+  return getModel(data);
 }
 
 function getModel({ namespace = 'defaultName', ...rest }) {
   checkModel(namespace);
   prevModels = namespace;
-  return models[namespace].useModel(rest);
-}
-function getModelEntity(namespace = 'defaultName') {
-  checkModel(namespace);
-  return models[namespace].getModel();
+  return models[namespace];
 }
 
 function checkModel(namespace = 'defaultName') {
@@ -48,57 +47,14 @@ function checkModel(namespace = 'defaultName') {
   }
 }
 
-function createModel({ namespace, state = {}, reducers = {}, effects = {}, auto = false }) {
-  models[namespace] = new Model({
+function createModel({ namespace, state = {}, auto = false, recyclable = true }) {
+  models[namespace] = createStore({
+    ...state,
+    ...defaultState,
+    ...defaultEffects,
     namespace,
-    state: {
-      listData: {
-        records: [],
-      },
-      formData: {},
-      searchData: {},
-      load: {
-        loading: false,
-        effects: {},
-      },
-      ...state,
-    },
-    reducers: {
-      save({ payload }, { state }) {
-        return {
-          ...state,
-          ...payload
-        }
-      },
-      saveData({ payload }, { state }) {
-        const { key, data } = payload;
-        return {
-          ...state,
-          [key]: {
-            ...state[key],
-            ...data,
-          }
-        }
-      },
-      loading({ payload }, { state }) {
-        const { loading, effect } = payload;
-        return {
-          ...state,
-          load: {
-            loading,
-            effects: {
-              [effect]: loading,
-            }
-          }
-        }
-      },
-      ...reducers,
-    },
-    effects: {
-      ...defaultEffects,
-      ...effects,
-    },
-    auto,
+    _auto: auto,
+    _recyclable: recyclable,
   });
 
   return models[namespace];
@@ -109,10 +65,10 @@ function removeModel(namespace) {
 }
 
 export {
-  checkDispatch as useModel,
+  getModel,
+  useModel,
   createModel,
   removeModel,
-  getModelEntity as getModel,
 }
 
 /**

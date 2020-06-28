@@ -1,14 +1,15 @@
 import { getModel } from '@/Model';
-import { getDataPool } from '@/DataPool';
+import { getLocationSearch } from '@/utils/location';
 import replaceKey from './replaceKey';
 
-export function formatAPI(API, { namespace, data, placeholder = 'undefined' }) {
+export function formatAPI(API, { namespace, data, placeholder = 'undefined' }) {  
   const model = getModel(namespace);
-  const dataPool = getDataPool(namespace);
+  
+  const locationData = getLocationSearch();
 
   const APIUtils = replaceKey({
     model,
-    dataPool,
+    locationData,
     data,
     placeholder,
   });

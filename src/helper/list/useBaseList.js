@@ -1,29 +1,23 @@
-import { useContext, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useModel } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from '@/config/APIConfig';
 import { PromiseAPI } from '@/utils/PromiseGen';
-import PageContext from '@/context/PageContext';
 import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
-import useShare from '@/utils/hooks/useShare';
 
 export default function useBaseList({
-  namespace, modelPath = 'listData',
+  namespace,
   extraData
 }, config) {
 
-  const { API = {}, share } = config;
-  const [shareData, setShare, destroyShare] = useShare({
-    share,
-  });
+  const { API = {} } = config;
 
-  const [modelStatus, dispatch, onCanRecyclable] = useModel({
+  const model = useModel({
     namespace,
     type: 'useBaseList',
   });
-  const context = useContext(PageContext);
 
-  const listData = modelStatus[modelPath];
+  const listData = model.listData;
   const { current, pageSize, records } = listData;
 
   const fAPI = useRef();
@@ -31,32 +25,27 @@ export default function useBaseList({
     namespace,
     data: extraData,
   });
-  const loading = modelStatus.load.effects['fetchList'] || false;
+  const loading = model.loading;
 
   useWillMount(_ => {
-    if (share) {
-      setShare({
-        onGetList,
-      });
+    if (model) {
+      model.setPageData('onGetList', onGetList);
     }
   });
 
   useEffect(_ => {
-    if (share) {
-      const { current, pageSize } = listData;
-      setShare({
-        current,
-        pageSize,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [share, listData]);
+    const { current, pageSize } = listData;
+    model.setPageData('current', current);
+    model.setPageData('pageSize', pageSize);
 
-  useWillUnmount(() => destroyShare([
-    'onGetList',
-    'current',
-    'pageSize',
-  ]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listData]);
+
+  useWillUnmount(() => {
+    model.setPageData('onGetList', undefined);
+    model.setPageData('current', undefined);
+    model.setPageData('pageSize', undefined);
+  });
 
   function onGetList({
     current = get('DEFAULT_current'),
@@ -64,7 +53,7 @@ export default function useBaseList({
     queryData = {},
     sorter = {},
   }) {
-    const { queryData: qD } = shareData;
+    const { queryData: qD } = model._pageData;
     const { field, order } = sorter;
     const payload = {
       ...qD,
@@ -86,11 +75,9 @@ export default function useBaseList({
 
     const api = fAPI.current.listAPI;
     return PromiseAPI(api, () => (
-      dispatch({
-        type: 'fetchList',
-        API: api,
-        MODELPATH: modelPath,
-        DIRECTRETURN: false,
+      model.fetchList({
+        // API: api,
+        API: API.listAPI,
         payload: payload,
       })
     )
@@ -109,41 +96,34 @@ export default function useBaseList({
     const api = fAPI.current.deleteAPI;
 
     if (api) {
-      dispatch({
-        type: 'deleteOne',
-        API: api,
-        MODELPATH: modelPath,
-      }).then(({ code }) => {
-        if (code === 200) {
-          onRefresh();
-        }
-      });
+      model.deleteOne({
+        // API: api,
+        API: API.deleteAPI,
+      })
+        .then(({ code }) => {
+          if (code === 200) {
+            onRefresh();
+          }
+        });
     }
   }
 
   function onClearList() {
-    return dispatch({
-      type: 'save',
-      payload: {
-        [modelPath]: {},
-      },
-    });
+    return model.listData = {
+      records: [],
+    }
   }
 
   return {
     loading,
     config,
     data: records,
-    modelStatus,
-    context,
-    dispatch,
+    model,
     handle: {
       onGetList,
       onRefresh,
       onDelete,
       onClearList,
-
-      onCanRecyclable,
     }
   }
 }

@@ -1,70 +1,51 @@
-import { useContext } from 'react';
 import { useModel } from '@/Model';
-import PageContext from '@/context/PageContext';
-import useShare from '@/utils/hooks/useShare';
 import { useWillUnmount } from '@/utils/hooks/lifeCycle';
 
 export default function useBaseSearch({
-  namespace, modelPath = 'searchData'
+  namespace
 }, config) {
 
-  const { share } = config;
-  const [shareData, setShare, destroyShare] = useShare({
-    share,
-  });
-  const [modelStatus, dispatch, onCanRecyclable] = useModel({
+  const model = useModel({
     namespace,
     type: 'useBaseSearch',
   });
-  const context = useContext(PageContext);
 
-  useWillUnmount(() => destroyShare('queryData'));
+  useWillUnmount(() => {
+    model.setPageData('queryData', {});
+  });
 
-  const searchData = modelStatus[modelPath] || {};
+  const searchData = model.searchData || {};
 
   function onSearch(queryData) {
-    const { current, pageSize, onGetList } = shareData;
+    const { current, pageSize, onGetList } = model._pageData;
     if (onGetList) {
       onGetList({
         current: 1,
         pageSize,
         queryData,
       });
-    } else {
-      console.warn(`请在 conifg 中使用 share 来绑定需要刷新的 Table`);
     }
 
     onSetSearchData(queryData);
   }
 
   function onSetSearchData(queryData = {}) {
-    setShare({
-      queryData: queryData || {},
-    });
+    model.setPageData('queryData', queryData);
   }
 
   function onClearSearch() {
-    return dispatch({
-      type: 'save',
-      payload: {
-        [modelPath]: {},
-      },
-    });
+    return model.searchData = {};
   }
 
   return {
-    loading: modelStatus.load.effects['fetchList'] || false,
+    loading: model.loading,
     config,
     data: searchData,
-    modelStatus,
-    context,
-    dispatch,
+    model,
     handle: {
       onSearch,
       onSetSearchData,
       onClearSearch,
-
-      onCanRecyclable,
     }
   }
 }

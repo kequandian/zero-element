@@ -1,27 +1,18 @@
-import { useContext } from 'react';
 import { useModel } from '@/Model';
-import { formatAPI } from '@/utils/format';
 import { PromiseAPI } from '@/utils/PromiseGen';
-import PageContext from '@/context/PageContext';
 
 export default function useBaseForm({
-  namespace, modelPath = 'formData',
-  extraData,
+  namespace,
 }, config) {
 
   const { API = {} } = config;
-  const [modelStatus, dispatch, onCanRecyclable] = useModel({
+  const model = useModel({
     namespace,
     type: 'useBaseForm',
   });
-  const context = useContext(PageContext);
 
-  const formData = modelStatus[modelPath] || {};
-  const fAPI = formatAPI(API, {
-    namespace,
-    data: extraData,
-  });
-  const loading = modelStatus.load.effects['fetchOne'] || modelStatus.load.effects['createForm'] || modelStatus.load.effects['updateForm'] || false;
+  const formData = model.formData || {};
+  const loading = model.loading;
 
   function onGetOne({ }) {
 
@@ -29,13 +20,9 @@ export default function useBaseForm({
       return Promise.reject();
     }
 
-    const api = fAPI.getAPI;
     return PromiseAPI(api, () => (
-      dispatch({
-        type: 'fetchOne',
-        API: api,
-        MODELPATH: modelPath,
-        DIRECTRETURN: false,
+      model.fetchOne({
+        API: API.getAPI,
         payload: {},
       })
     )
@@ -48,12 +35,9 @@ export default function useBaseForm({
       return Promise.reject();
     }
 
-    const api = fAPI.createAPI;
     return PromiseAPI(api, () => (
-      dispatch({
-        type: 'createForm',
-        API: api,
-        MODELPATH: modelPath,
+      model.createForm({
+        API: API.createAPI,
         options, // request options
         payload: {
           ...formData,
@@ -71,12 +55,9 @@ export default function useBaseForm({
       return Promise.reject();
     }
 
-    const api = fAPI.updateAPI;
     return PromiseAPI(api, () => (
-      dispatch({
-        type: 'updateForm',
-        API: api,
-        MODELPATH: modelPath,
+      model.updateForm({
+        API: API.updateAPI,
         options, // request options
         payload: {
           ...formData,
@@ -88,28 +69,19 @@ export default function useBaseForm({
   }
 
   function onClearForm() {
-    return dispatch({
-      type: 'save',
-      payload: {
-        [modelPath]: {},
-      },
-    });
+    return model.save('formData', {});
   }
 
   return {
     loading,
     config,
     data: formData,
-    modelStatus,
-    context,
-    dispatch,
+    model,
     handle: {
       onGetOne,
       onCreateForm,
       onUpdateForm,
       onClearForm,
-
-      onCanRecyclable,
     }
   }
 }
