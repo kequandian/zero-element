@@ -1,13 +1,9 @@
-import { useRef, useEffect } from 'react';
-import { useModel } from '@/Model';
-import { formatAPI } from '@/utils/format';
+import { useModel, getPageData, setPageData } from '@/Model';
 import { get } from '@/config/APIConfig';
-import { PromiseAPI } from '@/utils/PromiseGen';
-import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
+import { useWillUnmount } from '@/utils/hooks/lifeCycle';
 
 export default function useBaseList({
   namespace,
-  extraData
 }, config) {
 
   const { API = {} } = config;
@@ -20,31 +16,16 @@ export default function useBaseList({
   const listData = model.listData;
   const { current, pageSize, records } = listData;
 
-  const fAPI = useRef();
-  fAPI.current = formatAPI(API, {
-    namespace,
-    data: extraData,
-  });
-  const loading = model.loading;
+  const loading = model.fetchList.loading;
 
-  useWillMount(_ => {
-    if (model) {
-      model.setPageData('onGetList', onGetList);
-    }
-  });
-
-  useEffect(_ => {
-    const { current, pageSize } = listData;
-    model.setPageData('current', current);
-    model.setPageData('pageSize', pageSize);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listData]);
+  setPageData(namespace, 'onGetList', onGetList);
+  setPageData(namespace, 'current', current);
+  setPageData(namespace, 'pageSize', pageSize);
 
   useWillUnmount(() => {
-    model.setPageData('onGetList', undefined);
-    model.setPageData('current', undefined);
-    model.setPageData('pageSize', undefined);
+    setPageData(namespace, 'onGetList', undefined);
+    setPageData(namespace, 'current', undefined);
+    setPageData(namespace, 'pageSize', undefined);
   });
 
   function onGetList({
@@ -53,7 +34,7 @@ export default function useBaseList({
     queryData = {},
     sorter = {},
   }) {
-    const { queryData: qD } = model._pageData;
+    const { queryData: qD } = getPageData(namespace);
     const { field, order } = sorter;
     const payload = {
       ...qD,
@@ -73,15 +54,10 @@ export default function useBaseList({
       return Promise.reject();
     }
 
-    const api = fAPI.current.listAPI;
-    return PromiseAPI(api, () => (
-      model.fetchList({
-        // API: api,
-        API: API.listAPI,
-        payload: payload,
-      })
-    )
-    );
+    return model.fetchList({
+      API: API.listAPI,
+      payload: payload,
+    });
   }
 
   function onRefresh() {
@@ -93,11 +69,8 @@ export default function useBaseList({
 
   function onDelete({ record, options = {} }) {
     // dataPool.setRecord(record); 应该由 handleAction 的上一层调用
-    const api = fAPI.current.deleteAPI;
-
-    if (api) {
+    if (API.deleteAPI) {
       model.deleteOne({
-        // API: api,
         API: API.deleteAPI,
       })
         .then(({ code }) => {

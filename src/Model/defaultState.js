@@ -6,8 +6,4 @@ export default {
   searchData: {},
 
   formData: {},
-
-  _pageData: {
-    queryData: {},
-  },
 }

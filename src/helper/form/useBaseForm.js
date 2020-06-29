@@ -1,5 +1,4 @@
 import { useModel } from '@/Model';
-import { PromiseAPI } from '@/utils/PromiseGen';
 
 export default function useBaseForm({
   namespace,
@@ -20,13 +19,10 @@ export default function useBaseForm({
       return Promise.reject();
     }
 
-    return PromiseAPI(api, () => (
-      model.fetchOne({
-        API: API.getAPI,
-        payload: {},
-      })
-    )
-    );
+    return model.fetchOne({
+      API: API.getAPI,
+      payload: {},
+    });
   }
 
   function onCreateForm({ fields, options }) {
@@ -35,17 +31,14 @@ export default function useBaseForm({
       return Promise.reject();
     }
 
-    return PromiseAPI(api, () => (
-      model.createForm({
-        API: API.createAPI,
-        options, // request options
-        payload: {
-          ...formData,
-          ...fields, // 用户输入优先
-        },
-      })
-    )
-    );
+    return model.createForm({
+      API: API.createAPI,
+      options, // request options
+      payload: {
+        ...formData,
+        ...fields, // 用户输入优先
+      },
+    });
 
   }
 
@@ -55,17 +48,14 @@ export default function useBaseForm({
       return Promise.reject();
     }
 
-    return PromiseAPI(api, () => (
-      model.updateForm({
-        API: API.updateAPI,
-        options, // request options
-        payload: {
-          ...formData,
-          ...fields, // 用户输入优先
-        },
-      })
-    )
-    );
+    return model.updateForm({
+      API: API.updateAPI,
+      options, // request options
+      payload: {
+        ...formData,
+        ...fields, // 用户输入优先
+      },
+    });
   }
 
   function onClearForm() {

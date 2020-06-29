@@ -1,15 +1,16 @@
-import { createStore } from 'iostore';
+import { createStore, useStore } from 'iostore';
 import models from 'iostore/src/stores';
 import defaultEffects from './defaultEffects';
 import defaultState from './defaultState';
 
 let prevModels = '';
+const pageData = {};
 
 function useModel(options) {
   let data = options;
 
-  if (typeof options === 'object') {
-    const { namespace = 'defaultName' } = options;
+  if (typeof options === 'object' && options.namespace) {
+    const { namespace } = options;
 
     // 销毁可回收的 model
     if (namespace !== prevModels && models[prevModels]) {
@@ -29,26 +30,29 @@ function useModel(options) {
     throw new Error('params namespace is required');
   }
 
-  return getModel(data);
+  checkModel(data.namespace);
+  return useStore()[data.namespace];
 }
 
-function getModel({ namespace = 'defaultName', ...rest }) {
-  checkModel(namespace);
+function getModel(namespace) {
+  // checkModel(namespace);
   prevModels = namespace;
   return models[namespace];
 }
 
-function checkModel(namespace = 'defaultName') {
+function checkModel(namespace) {
+
   if (!models[namespace]) {
     createModel({ namespace, auto: true });
     if (process.env.NODE_ENV === 'development') {
-      console.log('auto create model: ', namespace, models);
+      console.warn('auto create model: ', namespace, models);
     }
   }
 }
 
 function createModel({ namespace, state = {}, auto = false, recyclable = true }) {
-  models[namespace] = createStore({
+
+  createStore({
     ...state,
     ...defaultState,
     ...defaultEffects,
@@ -56,18 +60,35 @@ function createModel({ namespace, state = {}, auto = false, recyclable = true })
     _auto: auto,
     _recyclable: recyclable,
   });
+  pageData[namespace] = {};
 
   return models[namespace];
 }
 
+function getPageData(namespace) {
+  return pageData[namespace];
+}
+function setPageData(namespace, key, value) {
+  if (pageData[namespace]) {
+    pageData[namespace][key] = value;
+  } else {
+    console.warn(`pageData ${namespace} is undefined`, pageData);
+  }
+}
+
 function removeModel(namespace) {
   delete models[namespace];
+  delete pageData[namespace];
 }
 
 export {
   getModel,
   useModel,
   createModel,
+
+  getPageData,
+  setPageData,
+
   removeModel,
 }
 

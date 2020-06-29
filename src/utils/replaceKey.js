@@ -5,11 +5,11 @@ import win from "./window";
  * @param {object}
  * - [id] 从 locationData 中替换 id 的值
  * - (id) 从 model.record 中替换 id 的值
- * - {id} 从 model 中替换 id 的值
+ * - {id} 从 pageData.formData 中替换 id 的值
  * - <id> 从传入的 data 中替换 id 的值
  * - !#id#! 从 window.ZEle 中替换 id 的值
  */
-export default function replaceKey({ model, locationData, data = {}, placeholder }) {
+export default function replaceKey({ model, locationData, formData = {}, data = {}, placeholder }) {
   function handleReplace(str, key, value = placeholder) {
     return str.replace(key, value);
   }
@@ -38,7 +38,7 @@ export default function replaceKey({ model, locationData, data = {}, placeholder
             );
           } else if (key.indexOf('{') > -1) {
             string = handleReplace(string, key,
-              getDeepValue(model.formData, key.replace(/\{|\}/g, ''))
+              getDeepValue(formData, key.replace(/\{|\}/g, ''))
             );
           } else if (key.indexOf('<') > -1) {
             string = handleReplace(string, key,

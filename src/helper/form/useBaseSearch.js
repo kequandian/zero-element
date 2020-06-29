@@ -1,4 +1,4 @@
-import { useModel } from '@/Model';
+import { useModel, getPageData, setPageData } from '@/Model';
 import { useWillUnmount } from '@/utils/hooks/lifeCycle';
 
 export default function useBaseSearch({
@@ -11,13 +11,13 @@ export default function useBaseSearch({
   });
 
   useWillUnmount(() => {
-    model.setPageData('queryData', {});
+    setPageData(namespace, 'queryData', {});
   });
 
   const searchData = model.searchData || {};
 
   function onSearch(queryData) {
-    const { current, pageSize, onGetList } = model._pageData;
+    const { current, pageSize, onGetList } = getPageData(namespace);
     if (onGetList) {
       onGetList({
         current: 1,
@@ -30,7 +30,7 @@ export default function useBaseSearch({
   }
 
   function onSetSearchData(queryData = {}) {
-    model.setPageData('queryData', queryData);
+    setPageData(namespace, 'queryData', queryData);
   }
 
   function onClearSearch() {
