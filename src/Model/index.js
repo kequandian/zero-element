@@ -50,12 +50,13 @@ function checkModel(namespace) {
   }
 }
 
-function createModel({ namespace, state = {}, auto = false, recyclable = true }) {
+function createModel({ namespace, state = {}, effects = {}, auto = false, recyclable = true }) {
 
   createStore({
-    ...state,
     ...defaultState,
+    ...state,
     ...defaultEffects,
+    ...effects,
     namespace,
     _auto: auto,
     _recyclable: recyclable,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UseLayout, UseItem } from './utils/readConfig';
 import { getLocationPathname, getLocationSearch } from '@/utils/location';
 import { query } from '@/utils/request';
@@ -30,6 +30,10 @@ export default function Reader(props) {
     }
     return config;
   });
+
+  useEffect(_ => {
+    setCanConfig(config);
+  }, [config]);
 
   function getRemoteConfig({ target, path }) {
     console.log(`页面 ${path} 使用了远端配置文件`);

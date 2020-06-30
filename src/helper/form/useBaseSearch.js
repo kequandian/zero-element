@@ -34,7 +34,7 @@ export default function useBaseSearch({
   }
 
   function onClearSearch() {
-    return model.searchData = {};
+    return model.save('searchData', {});
   }
 
   return {
