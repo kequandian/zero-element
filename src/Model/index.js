@@ -53,8 +53,10 @@ function checkModel(namespace) {
 function createModel({ namespace, state = {}, effects = {}, auto = false, recyclable = true }) {
 
   createStore({
-    ...defaultState,
-    ...state,
+    ...JSON.parse(JSON.stringify({
+      ...defaultState,
+      ...state
+    })),
     ...defaultEffects,
     ...effects,
     namespace,
