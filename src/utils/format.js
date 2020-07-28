@@ -4,7 +4,7 @@ import replaceKey from './replaceKey';
 
 export function formatAPI(API, { namespace, data, placeholder = 'undefined' }) {
   const model = getModel(namespace);
-  const { formData, ...pageData } = getPageData(namespace);
+  const { formData, ...pageData } = getPageData(namespace) || {};
 
   const locationData = getLocationSearch();
 

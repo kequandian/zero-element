@@ -67,6 +67,7 @@ export default function Reader(props) {
   return (
     <UseLayout n={canConfig.layout}
       title={canConfig.title}
+      namespace={namespace}
       {...(canConfig.config || {})}
     >
       {canConfig.items && canConfig.items.map((itemCfg, i) =>

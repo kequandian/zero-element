@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useModel } from '@/Model';
+import { useModel, setPageData } from '@/Model';
 import { formatAPI } from '@/utils/format';
 import { get } from '@/config/APIConfig';
 import { useWillMount, useWillUnmount } from '@/utils/hooks/lifeCycle';
@@ -27,12 +27,12 @@ export default function useBaseChildren({
     data: extraData,
   });
 
-  useWillMount(_ => {
-    model.setPageData('onGetChildrenList', onGetList);
-  });
-  useWillUnmount(() => {
-    model.setPageData('onGetChildrenList', undefined);
-  });
+  // useWillMount(_ => {
+  //   setPageData(namespace, 'onGetChildrenList', onGetList);
+  // });
+  // useWillUnmount(() => {
+  //   setPageData(namespace, 'onGetChildrenList', undefined);
+  // });
 
   function onGetList({
     current = get('DEFAULT_current'),

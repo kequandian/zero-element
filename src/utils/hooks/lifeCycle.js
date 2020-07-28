@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useMemo } from 'react';
+import { useReducer, useEffect, useMemo } from 'react';
 
 export {
   useWillMount,
   useDidMount,
   useWillUnmount,
+  useForceUpdate,
 }
 
 function useWillMount(func) {
@@ -16,4 +17,9 @@ function useDidMount(func) {
 
 function useWillUnmount(func) {
   useEffect(() => func, []);
+}
+
+function useForceUpdate() {
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  return forceUpdate;
 }

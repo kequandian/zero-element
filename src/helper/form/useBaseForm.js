@@ -2,6 +2,7 @@ import { useModel } from '@/Model';
 
 export default function useBaseForm({
   namespace,
+  extraData,
 }, config) {
 
   const { API = {} } = config;
@@ -21,6 +22,7 @@ export default function useBaseForm({
 
     return model.fetchOne({
       API: API.getAPI,
+      extraData,
       payload: {},
     });
   }
@@ -34,6 +36,7 @@ export default function useBaseForm({
     return model.createForm({
       API: API.createAPI,
       options, // request options
+      extraData,
       payload: {
         ...formData,
         ...fields, // 用户输入优先
@@ -51,6 +54,7 @@ export default function useBaseForm({
     return model.updateForm({
       API: API.updateAPI,
       options, // request options
+      extraData,
       payload: {
         ...formData,
         ...fields, // 用户输入优先

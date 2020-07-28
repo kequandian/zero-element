@@ -1,9 +1,11 @@
-import { useModel, getPageData, setPageData } from '@/Model';
+import { useModel, getPageData, setPageData, clearPageData } from '@/Model';
 import { get } from '@/config/APIConfig';
 import { useWillUnmount } from '@/utils/hooks/lifeCycle';
 
 export default function useBaseList({
   namespace,
+  extraData,
+  dataPath = 'listData',
 }, config) {
 
   const { API = {} } = config;
@@ -13,8 +15,8 @@ export default function useBaseList({
     type: 'useBaseList',
   });
 
-  const listData = model.listData;
-  const { current, pageSize, records } = listData;
+  const listData = model[dataPath];
+  const { current, pageSize, records = [] } = listData || {};
 
   const loading = model.fetchList.loading;
 
@@ -23,9 +25,9 @@ export default function useBaseList({
   setPageData(namespace, 'pageSize', pageSize);
 
   useWillUnmount(() => {
-    setPageData(namespace, 'onGetList', undefined);
-    setPageData(namespace, 'current', undefined);
-    setPageData(namespace, 'pageSize', undefined);
+    clearPageData(namespace, 'onGetList', undefined);
+    clearPageData(namespace, 'current', undefined);
+    clearPageData(namespace, 'pageSize', undefined);
   });
 
   function onGetList({
@@ -56,7 +58,9 @@ export default function useBaseList({
 
     return model.fetchList({
       API: API.listAPI,
+      extraData,
       payload: payload,
+      dataPath,
     });
   }
 
@@ -72,6 +76,7 @@ export default function useBaseList({
     if (API.deleteAPI) {
       model.deleteOne({
         API: API.deleteAPI,
+        extraData,
       })
         .then(({ code }) => {
           if (code === 200) {
@@ -82,7 +87,7 @@ export default function useBaseList({
   }
 
   function onClearList() {
-    return model.listData = {
+    return model[dataPath] = {
       records: [],
     }
   }

@@ -8,24 +8,29 @@ async function save(key, payload) {
   this[key] = payload;
 }
 
-async function fetchList({ API, payload }) {
+async function fetchList({ API, payload, extraData, dataPath = 'listData' }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
+    data: extraData,
   });
 
   if (process.env.NODE_ENV === 'development') {
-    console.log(`fetchList ${fAPI}`, payload);
+    console.log(`fetchList ${fAPI}`, dataPath, payload);
   }
 
   const { data: result } = await query(fAPI, payload);
   if (result && result.code === 200) {
     if (Array.isArray(result.data)) {
       const records = result.data;
-      this.listData.records = records;
+
+      if (!this[dataPath]) {
+        this[dataPath] = {};
+      }
+      this[dataPath].records = records;
 
     } else {
       const data = result.data;
-      this.listData = {
+      this[dataPath] = {
         ...data,
         current: data[get('RESPONSE_FIELD_current')],
         pageSize: data[get('RESPONSE_FIELD_pageSize')],
@@ -35,15 +40,16 @@ async function fetchList({ API, payload }) {
     }
 
   } else {
-    this.listData = { records: [] };
+    this[dataPath] = { records: [] };
   }
 
   return result;
 }
 
-async function deleteOne({ API, payload }) {
+async function deleteOne({ API, payload, extraData }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
+    data: extraData,
   });
 
   const { data: result } = await remove(fAPI, payload);
@@ -53,9 +59,10 @@ async function deleteOne({ API, payload }) {
   return result;
 }
 
-async function fetchOne({ API, payload }) {
+async function fetchOne({ API, payload, extraData }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
+    data: extraData,
   });
 
   const { data: result } = await query(fAPI, payload);
@@ -70,9 +77,10 @@ async function fetchOne({ API, payload }) {
   return result;
 }
 
-async function createForm({ API, payload, options }) {
+async function createForm({ API, payload, options, extraData }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
+    data: extraData,
   });
 
   const { data: result } = await post(fAPI, payload, options);
@@ -83,9 +91,10 @@ async function createForm({ API, payload, options }) {
   return result;
 }
 
-async function updateForm({ API, payload, options }) {
+async function updateForm({ API, payload, options, extraData }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
+    data: extraData,
   });
 
   const { data: result } = await update(fAPI, payload, options);
