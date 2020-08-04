@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UseLayout, UseItem } from './utils/readConfig';
 import { getLocationPathname, getLocationSearch } from '@/utils/location';
 import { query } from '@/utils/request';
 import global from '@/config/global';
-
+import { setRef } from '@/Model';
 
 export default function Reader(props) {
   const { namespace, config = {}, ...restProps } = props;
   const { remoteConfig = {} } = window.ZEle || {};
+
+  const zeleRef = useRef(null);
+
+  setRef(namespace, zeleRef);
 
   const [canConfig, setCanConfig] = useState(_ => {
     const { removeConfig = true } = global;
@@ -65,18 +69,20 @@ export default function Reader(props) {
   }
 
   return (
-    <UseLayout n={canConfig.layout}
-      title={canConfig.title}
-      namespace={namespace}
-      {...(canConfig.config || {})}
-    >
-      {canConfig.items && canConfig.items.map((itemCfg, i) =>
-        <UseItem key={i}
-          config={itemCfg}
-          namespace={itemCfg.namespace || namespace}
-          {...restProps}
-        />
-      )}
-    </UseLayout>
+    <div ref={zeleRef}>
+      <UseLayout n={canConfig.layout}
+        title={canConfig.title}
+        namespace={namespace}
+        {...(canConfig.config || {})}
+      >
+        {canConfig.items && canConfig.items.map((itemCfg, i) =>
+          <UseItem key={i}
+            config={itemCfg}
+            namespace={itemCfg.namespace || namespace}
+            {...restProps}
+          />
+        )}
+      </UseLayout>
+    </div>
   );
 }

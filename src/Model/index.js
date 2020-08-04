@@ -2,11 +2,17 @@ import { createStore, useStore } from 'iostore';
 import models from 'iostore/src/stores';
 import defaultEffects from './defaultEffects';
 import defaultState from './defaultState';
+import devUtils from './devUtils';
 
-let prevModels = '';
-let siblingModels = {};
+let refs = {};
 
 const pageData = {};
+
+devUtils({
+  refs,
+  pageData,
+  models,
+});
 
 function useModel(options) {
   let data = options;
@@ -20,64 +26,63 @@ function useModel(options) {
     throw new Error('params namespace is required');
   }
 
-  const { namespace } = data;
+  const { namespace, ref } = data;
 
+  if (ref) {
+    setRef(namespace, ref);
+  }
   // 销毁可回收的 model
-  if (namespace !== prevModels && models[prevModels]) {
+  const autoCreateModels = Object.keys(models).filter(key => models[key]._auto);
 
-    const [isFamily, kin] = checkFamily(namespace, prevModels);
+  const loseRef = [];
 
-    if (isFamily === false) {
-      recycleModel(namespace, prevModels);
-      recycleModelList(namespace, Object.keys(siblingModels));
-    } else if (isFamily) {
-      if (kin === 'parent') {
-        // 从 子页面 跳转到 父页面 时, 回收 全部子页面
-        recycleModelList(namespace, Object.keys(siblingModels));
-      } else if (kin !== 'self') {
-        siblingModels[namespace] = true;
+  autoCreateModels.forEach(ns => {
+    if (!checkRef(ns)) {
+
+      if (namespace !== ns && models[ns]) {
+        const [isFamily, kin] = checkFamily(ns, namespace);
+
+        if (isFamily === false) {
+          loseRef.push(ns);
+        } else if (isFamily) {
+          if (kin === 'parent') {
+          } else if (kin !== 'self') {
+            loseRef.push(ns);
+          }
+        }
       }
     }
+  });
 
-    prevModels = namespace;
-  }
+  recycleModelList(loseRef);
 
   checkModel(data.namespace);
   return useStore()[data.namespace];
 }
 
-function recycleModel(namespace, prevModels) {
-  if (models[prevModels]) {
-    if (models[prevModels]._recyclable === false) {
+function recycleModel(namespace) {
+
+  if (models[namespace]) {
+    if (checkRef(namespace)) {
       return false;
     }
-  } else {
-    console.warn(`model ${prevModels} 意外地被提前回收`);
-    return false;
-  }
 
-  if (namespace === prevModels) {
-    console.warn(`正在使用的 model ${namespace} 不应该被回收!`);
-    return false;
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`回收 model %c${namespace}%c\n当前全部 model`,
+        'color: red', '', models);
+    }
+    removeModel(namespace);
   }
-
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`当前 model %c${namespace}\n%c回收 model %c${prevModels}\n%c当前全部 model`,
-      'color: green', '', 'color: red', '', models);
-  }
-  removeModel(prevModels);
 }
 
-function recycleModelList(namespace, prevModelsList) {
-  prevModelsList.forEach(removeName => {
-    recycleModel(namespace, removeName);
+function recycleModelList(prevModelsList) {
+  prevModelsList.forEach(namespace => {
+    recycleModel(namespace);
   })
-  siblingModels = {};
 }
 
 function getModel(namespace) {
   // checkModel(namespace);
-  prevModels = namespace;
   return models[namespace];
 }
 
@@ -86,7 +91,7 @@ function checkModel(namespace) {
   if (!models[namespace]) {
     createModel({ namespace, auto: true });
     if (process.env.NODE_ENV === 'development') {
-      console.log('auto create model: ', namespace, models);
+      console.log(`auto create model: %c${namespace}%c\n当前全部 model`, 'color: green', '', models);
     }
   }
 }
@@ -125,9 +130,25 @@ function clearPageData(namespace, key, value = {}) {
   }
 }
 
+function setRef(namespace, ref) {
+  if (!refs[namespace]) {
+    refs[namespace] = [];
+  }
+  refs[namespace] = refs[namespace].filter(r => r.current);
+  refs[namespace].push(ref);
+}
+function checkRef(namespace) {
+
+  if (Array.isArray(refs[namespace])) {
+    return refs[namespace].some(r => r.current);
+  }
+  return false;
+}
+
 function removeModel(namespace) {
   delete models[namespace];
   delete pageData[namespace];
+  delete refs[namespace];
 }
 
 export {
@@ -138,6 +159,8 @@ export {
   getPageData,
   setPageData,
   clearPageData,
+
+  setRef,
 
   removeModel,
 }
