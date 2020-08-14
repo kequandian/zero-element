@@ -20,6 +20,7 @@ async function fetchList({ API, payload, extraData, dataPath = 'listData' }) {
 
   const { data: result } = await query(fAPI, payload);
   if (result && result.code === 200) {
+    this.searchData = payload;
     if (Array.isArray(result.data)) {
       const records = result.data;
 

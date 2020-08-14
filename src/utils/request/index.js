@@ -37,12 +37,13 @@ export async function update(api, data = {}) {
     },
   }).catch(error);
 }
-export async function remove(api) {
+export async function remove(api, data) {
   return request.delete(api, {
     baseURL: canEndPoint(api),
     headers: {
       'Authorization': "Bearer " + getToken(),
     },
+    data,
   }).catch(error);
 }
 export async function upload(api, data) {

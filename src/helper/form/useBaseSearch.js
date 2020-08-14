@@ -9,12 +9,11 @@ export default function useBaseSearch({
     namespace,
     type: 'useBaseSearch',
   });
+  const { searchData } = model;
 
   useWillUnmount(() => {
-    clearPageData(namespace, 'queryData');
+    clearPageData(namespace, 'searchData');
   });
-
-  const searchData = model.searchData || {};
 
   function onSearch(queryData) {
     const { current, pageSize, onGetList } = getPageData(namespace);
@@ -30,10 +29,11 @@ export default function useBaseSearch({
   }
 
   function onSetSearchData(queryData = {}) {
-    setPageData(namespace, 'queryData', queryData);
+    setPageData(namespace, 'searchData', queryData);
   }
 
   function onClearSearch() {
+    clearPageData(namespace, 'searchData');
     return model.save('searchData', {});
   }
 

@@ -16,6 +16,7 @@ export default function useBaseList({
   });
 
   const listData = model[dataPath];
+  const { searchData } = model;
   const { current, pageSize, records = [] } = listData || {};
 
   const loading = model.fetchList.loading;
@@ -36,10 +37,11 @@ export default function useBaseList({
     queryData = {},
     sorter = {},
   }) {
-    const { queryData: qD } = getPageData(namespace);
+    const { searchData: searchPD } = getPageData(namespace) || {};
     const { field, order } = sorter;
     const payload = {
-      ...qD,
+      ...searchPD,
+      ...searchData,
       ...queryData,
       [get('REQUEST_FIELD_current')]: current,
       [get('REQUEST_FIELD_pageSize')]: pageSize,
