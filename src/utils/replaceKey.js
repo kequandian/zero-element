@@ -1,4 +1,5 @@
 import win from "./window";
+import _ from 'lodash';
 
 /**
  *  API 参数化的具体实现
@@ -10,8 +11,12 @@ import win from "./window";
  * - !#id#! 从 window.ZEle 中替换 id 的值
  */
 export default function replaceKey({ model, locationData, formData = {}, data = {}, placeholder }) {
-  function handleReplace(str, key, value = placeholder) {
-    return str.replace(key, value);
+  function handleReplace(str, key, value) {
+    let v = value;
+    if (!v && v !== 0) {
+      v = placeholder;
+    }
+    return str.replace(key, v);
   }
 
   return {
@@ -78,12 +83,5 @@ export default function replaceKey({ model, locationData, formData = {}, data = 
 }
 
 function getDeepValue(data, key) {
-  if (key.indexOf('.') > -1) {
-    let rst = data;
-    key.split('.').forEach(k => {
-      rst = rst[k];
-    })
-    return rst;
-  }
-  return data[key];
+  return _.get(data, key);
 }

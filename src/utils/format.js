@@ -20,7 +20,6 @@ export function formatAPI(API, { namespace, data, placeholder = 'undefined' }) {
   });
 
   if (!API) {
-    console.warn('未知的数据格式: ', API);
     return '';
   }
   if (typeof API === 'string') {

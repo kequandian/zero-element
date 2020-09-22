@@ -17,13 +17,14 @@ export default function useBaseList({
 
   const listData = model[dataPath];
   const { searchData } = model;
-  const { current, pageSize, records = [] } = listData || {};
+  const { current, pageSize, total, records } = listData || {};
 
   const loading = model.fetchList.loading;
 
   setPageData(namespace, 'onGetList', onGetList);
   setPageData(namespace, 'current', current);
   setPageData(namespace, 'pageSize', pageSize);
+  setPageData(namespace, 'total', total);
 
   useWillUnmount(() => {
     clearPageData(namespace, 'onGetList', undefined);
