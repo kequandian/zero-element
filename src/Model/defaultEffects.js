@@ -17,7 +17,7 @@ async function fetchList({ API, payload, extraData, dataPath = 'listData' }) {
   if (process.env.NODE_ENV === 'development') {
     console.log(`fetchList ${fAPI}`, dataPath, payload);
   }
-
+  this[dataPath] = { records: [] };
   const { data: result } = await query(fAPI, payload);
   if (result && result.code === 200) {
     this.searchData = payload;
@@ -66,6 +66,7 @@ async function fetchOne({ API, payload, extraData }) {
     data: extraData,
   });
 
+  this.formData = {};
   const { data: result } = await query(fAPI, payload);
 
   if (result && result.code === 200) {

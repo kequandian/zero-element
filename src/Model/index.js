@@ -96,14 +96,19 @@ function checkModel(namespace) {
   }
 }
 
-function createModel({ namespace, state = {}, effects = {}, auto = false, recyclable = true }) {
+function createModel({
+  namespace,
+  state = {}, effects = {},
+  auto = false, recyclable = true,
+  useDefault = true
+}) {
 
   createStore({
     ...JSON.parse(JSON.stringify({
-      ...defaultState,
+      ...(useDefault ? defaultState : {}),
       ...state
     })),
-    ...defaultEffects,
+    ...(useDefault ? defaultEffects : {}),
     ...effects,
     namespace,
     _auto: auto,

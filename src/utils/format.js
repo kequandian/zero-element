@@ -2,7 +2,7 @@ import { getModel, getPageData } from '@/Model';
 import { getLocationSearch } from '@/utils/location';
 import replaceKey from './replaceKey';
 
-export function formatAPI(API, { namespace, data, placeholder = 'undefined' }) {
+export function formatAPI(API, { namespace, data, placeholder = '' }) {
   const model = getModel(namespace);
   const { formData, ...pageData } = getPageData(namespace) || {};
 
