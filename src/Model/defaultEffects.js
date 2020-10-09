@@ -19,33 +19,36 @@ async function fetchList({ API, payload, extraData, dataPath = 'listData' }) {
   }
 
   const { data: result } = await query(fAPI, payload).catch(err => {
-    this[dataPath] = { records: [] };
+    this.save(dataPath, { records: [] });
     return {};
   })
 
   if (result && result.code === 200) {
-    this.searchData = payload;
+    this.save('searchData', { ...payload });
     if (Array.isArray(result.data)) {
       const records = result.data;
 
-      if (!this[dataPath]) {
-        this[dataPath] = {};
-      }
-      this[dataPath].records = records;
+      const saveData = { ...this[dataPath] };
+      saveData.records = records;
+      this.save(dataPath, saveData);
 
     } else {
       const data = result.data;
-      this[dataPath] = {
+      let saveData = { ...this[dataPath] };
+
+      saveData = {
         ...data,
-        current: data[get('RESPONSE_FIELD_current')],
-        pageSize: data[get('RESPONSE_FIELD_pageSize')],
-        total: data[get('RESPONSE_FIELD_total')],
+        current: Number(data[get('RESPONSE_FIELD_current')]),
+        pageSize: Number(data[get('RESPONSE_FIELD_pageSize')]),
+        total: Number(data[get('RESPONSE_FIELD_total')]),
         records: data[get('RESPONSE_FIELD_records')],
       };
+
+      this.save(dataPath, saveData);
     }
 
   } else {
-    this[dataPath] = { records: [] };
+    this.save(dataPath, { records: [] });
   }
 
   return result;
@@ -71,16 +74,16 @@ async function fetchOne({ API, payload, extraData }) {
   });
 
   const { data: result } = await query(fAPI, payload).catch(err => {
-    this.formData = {};
+    this.save('formData', {});
     return {};
   })
 
   if (result && result.code === 200) {
-    this.formData = {
-      ...result.data,
-    };
+    this.save('formData', {
+      ...result.data
+    });
   } else {
-    this.formData = {};
+    this.save('formData', {});
   }
   return result;
 }
