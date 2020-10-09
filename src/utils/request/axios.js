@@ -37,6 +37,7 @@ function error(err) {
     // 非 200 状态码
     if (err.response.status === 401 && typeof Unauthorized === 'function') {
       Unauthorized(err.response);
+      return Promise.reject(err);
     }
     console.warn('请求错误', err.response.status, err.response);
     if (typeof RequestError === 'function') {

@@ -39,7 +39,7 @@ function useModel(options) {
   autoCreateModels.forEach(ns => {
     if (!checkRef(ns)) {
 
-      if (namespace !== ns && models[ns]) {
+      if (namespace !== ns && models[ns] && models[namespace] && models[namespace]._auto) {
         const [isFamily, kin] = checkFamily(ns, namespace);
 
         if (isFamily === false) {
