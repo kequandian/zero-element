@@ -17,8 +17,12 @@ async function fetchList({ API, payload, extraData, dataPath = 'listData' }) {
   if (process.env.NODE_ENV === 'development') {
     console.log(`fetchList ${fAPI}`, dataPath, payload);
   }
-  this[dataPath] = { records: [] };
-  const { data: result } = await query(fAPI, payload);
+
+  const { data: result } = await query(fAPI, payload).catch(err => {
+    this[dataPath] = { records: [] };
+    return {};
+  })
+
   if (result && result.code === 200) {
     this.searchData = payload;
     if (Array.isArray(result.data)) {
@@ -66,8 +70,10 @@ async function fetchOne({ API, payload, extraData }) {
     data: extraData,
   });
 
-  this.formData = {};
-  const { data: result } = await query(fAPI, payload);
+  const { data: result } = await query(fAPI, payload).catch(err => {
+    this.formData = {};
+    return {};
+  })
 
   if (result && result.code === 200) {
     this.formData = {
