@@ -4,7 +4,7 @@ export function getToken() {
   return SS.get('token') || LS.get('token');
 }
 
-export function saveToken({ userName, token, avatar, permissions, remember }) {
+export function saveToken({ userName, token, avatar, permissions, remember, extra }) {
   if (remember) {
     if (token) {
       LS.set('token', token);
@@ -17,6 +17,9 @@ export function saveToken({ userName, token, avatar, permissions, remember }) {
     }
     if (userName) {
       LS.set('userName', userName);
+    }
+    if (extra) {
+      LS.set('extra', extra);
     }
   }
   else {
@@ -32,13 +35,16 @@ export function saveToken({ userName, token, avatar, permissions, remember }) {
     if (userName) {
       SS.set('userName', userName);
     }
+    if (extra) {
+      SS.set('extra', extra);
+    }
   }
 }
 
 export function removeToken() {
   SS.clear();
 
-  ['token', 'permissions', 'avatar'].forEach(key => {
+  ['token', 'permissions', 'avatar', 'userName', 'extra'].forEach(key => {
     LS.del(key);
     SS.del(key);
   });
@@ -94,4 +100,8 @@ export function getAvatar() {
 
 export function getUserName() {
   return SS.get('userName') || LS.get('userName');
+}
+
+export function getExtra() {
+  return SS.get('extra') || LS.get('extra');
 }

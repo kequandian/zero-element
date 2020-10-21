@@ -46,7 +46,7 @@ function useModel(options) {
           loseRef.push(ns);
         } else if (isFamily) {
           if (kin === 'parent') {
-          } else if (kin !== 'self') {
+          } else if (kin !== 'self' && kin !== 'sibling') {
             loseRef.push(ns);
           }
         }
@@ -126,7 +126,9 @@ function setPageData(namespace, key, value) {
   if (pageData[namespace]) {
     pageData[namespace][key] = value;
   } else {
-    console.warn(`pageData ${namespace} is undefined`, pageData);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`pageData ${namespace} is undefined`, pageData);
+    }
   }
 }
 function clearPageData(namespace, key, value = {}) {
