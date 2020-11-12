@@ -3,11 +3,12 @@ import { UseLayout, UseItem } from './utils/readConfig';
 import { getLocationPathname, getLocationSearch } from '@/utils/location';
 import { query } from '@/utils/request';
 import global from '@/config/global';
-import { setRef } from '@/Model';
+import { setRef, setHooks } from '@/Model';
 
 export default function Reader(props) {
   const { namespace, config = {}, ...restProps } = props;
   const { remoteConfig = {} } = window.ZEle || {};
+  const { hooks } = restProps;
 
   const zeleRef = useRef(null);
 
@@ -66,6 +67,10 @@ export default function Reader(props) {
 
   if (typeof canConfig !== 'object') {
     throw new Error('canConfig is invalid');
+  }
+
+  if (hooks) {
+    setHooks(namespace, hooks);
   }
 
   return (

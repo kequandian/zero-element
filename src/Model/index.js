@@ -7,10 +7,12 @@ import devUtils from './devUtils';
 let refs = {};
 
 const pageData = {};
+const hooksData = {};
 
 devUtils({
   refs,
   pageData,
+  hooksData,
   models,
 });
 
@@ -137,6 +139,14 @@ function clearPageData(namespace, key, value = {}) {
   }
 }
 
+function setHooks(namespace, hooks) {
+  hooksData[namespace] = hooks;
+}
+
+function getHooks(namespace) {
+  return hooksData[namespace] || {};
+}
+
 function setRef(namespace, ref) {
   if (!refs[namespace]) {
     refs[namespace] = [];
@@ -166,6 +176,9 @@ export {
   getPageData,
   setPageData,
   clearPageData,
+
+  setHooks,
+  getHooks,
 
   setRef,
 
