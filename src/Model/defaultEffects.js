@@ -23,7 +23,7 @@ async function fetchList({ API, payload, extraData, dataPath = 'listData' }) {
     return {};
   })
 
-  if (result && result.code === 200) {
+  if (result && result.code === 200 && result.data) {
     this.save('searchData', { ...payload });
     if (Array.isArray(result.data)) {
       const records = result.data;

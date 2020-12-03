@@ -6,45 +6,59 @@ function canEndPoint(api) {
   return api.indexOf('http') === -1 ? getEndpoint() : undefined
 }
 
+function setAuthorization(options) {
+  const token = getToken();
+  if (token) {
+    options.headers = {
+      ...options.headers,
+      'Authorization': "Bearer " + token,
+    }
+  }
+}
+
 export async function query(api, params = {}) {
-  return request.get(api, {
+  const opt = {
     params: {
       _t: new Date().getTime(),
       ...params,
     },
     baseURL: canEndPoint(api),
-    headers: {
-      'Authorization': "Bearer " + getToken(),
-    },
-  }).catch(error);
+    headers: {},
+  };
+  setAuthorization(opt);
+
+  return request.get(api, opt).catch(error);
 }
 export async function post(api, data = {}, options = {}) {
-  return request.post(api, data, {
+  const opt = {
     baseURL: canEndPoint(api),
-    headers: {
-      'Authorization': "Bearer " + getToken(),
-    },
+    headers: {},
     ...options,
-  })
+  };
+  setAuthorization(opt);
+
+  return request.post(api, data, opt)
     .then(res => downloadFile(res))
     .catch(error);
 }
 export async function update(api, data = {}) {
-  return request.put(api, data, {
+  const opt = {
     baseURL: canEndPoint(api),
-    headers: {
-      'Authorization': "Bearer " + getToken(),
-    },
-  }).catch(error);
+    headers: {},
+  };
+  setAuthorization(opt);
+
+  return request.put(api, data, opt).catch(error);
 }
 export async function remove(api, data) {
-  return request.delete(api, {
+  const opt = {
     baseURL: canEndPoint(api),
-    headers: {
-      'Authorization': "Bearer " + getToken(),
-    },
+    headers: {},
     data,
-  }).catch(error);
+  };
+  setAuthorization(opt);
+
+  return request.delete(api, opt).catch(error);
 }
 export async function upload(api, data) {
   let bodyData = undefined;
@@ -56,47 +70,48 @@ export async function upload(api, data) {
   } else {
     bodyData = data;
   }
-
-  return request.post(api, bodyData, {
+  const opt = {
     baseURL: canEndPoint(api),
     headers: {
-      'Authorization': "Bearer " + getToken(),
       'Content-Type': undefined,
     }
-  }).catch(error);
+  };
+  setAuthorization(opt);
+
+  return request.post(api, bodyData, opt).catch(error);
 }
 export async function download(api, options = {}, data) {
   const { method = 'get', fileName } = options;
-
-  return request({
+  const opt = {
     url: api,
     method,
     baseURL: canEndPoint(api),
     responseType: 'blob',
-    headers: {
-      'Authorization': "Bearer " + getToken(),
-    },
+    headers: {},
     params: method === 'get' ? data : undefined,
     data: method !== 'get' ? data : undefined,
-  })
+  };
+  setAuthorization(opt);
+
+  return request(opt)
     .then(res => downloadFile(res, fileName))
     .catch(error);
 }
 
 export async function preview(api, options = {}, data) {
   const { method = 'get', fileName } = options;
-
-  return request({
+  const opt = {
     url: api,
     method,
     baseURL: canEndPoint(api),
     responseType: 'blob',
-    headers: {
-      'Authorization': "Bearer " + getToken(),
-    },
+    headers: {},
     params: method === 'get' ? data : undefined,
     data: method !== 'get' ? data : undefined,
-  })
+  };
+  setAuthorization(opt);
+
+  return request(opt)
     .then(res => previewFile(res, fileName))
     .catch(error);
 }
