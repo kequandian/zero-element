@@ -10,13 +10,16 @@ import _ from 'lodash';
  * - <id> 从传入的 data 中替换 id 的值
  * - !#id#! 从 window.ZEle 中替换 id 的值
  */
-export default function replaceKey({ model, locationData, formData = {}, data = {}, placeholder }) {
+export default function replaceKey({
+  model, locationData, formData = {}, data = {}, placeholder,
+  encodeURI = false
+}) {
   function handleReplace(str, key, value) {
     let v = value;
     if (!v && v !== 0) {
       v = placeholder;
     }
-    return str.replace(key, v);
+    return str.replace(key, encodeURI ? encodeURIComponent(v) : v);
   }
 
   return {

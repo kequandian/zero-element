@@ -12,6 +12,7 @@ async function fetchList({ API, payload, extraData, dataPath = 'listData' }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
     data: extraData,
+    encodeURI: true,
   });
 
   if (process.env.NODE_ENV === 'development') {
@@ -58,6 +59,7 @@ async function deleteOne({ API, payload, extraData }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
     data: extraData,
+    encodeURI: true,
   });
 
   const { data: result } = await remove(fAPI, payload);
@@ -71,6 +73,7 @@ async function fetchOne({ API, payload, extraData }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
     data: extraData,
+    encodeURI: true,
   });
 
   const { data: result } = await query(fAPI, payload).catch(err => {
@@ -92,6 +95,7 @@ async function createForm({ API, payload, options, extraData }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
     data: extraData,
+    encodeURI: true,
   });
 
   const { data: result } = await post(fAPI, payload, options);
@@ -106,6 +110,7 @@ async function updateForm({ API, payload, options, extraData }) {
   const fAPI = formatAPI(API, {
     namespace: this.namespace,
     data: extraData,
+    encodeURI: true,
   });
 
   const { data: result } = await update(fAPI, payload, options);
