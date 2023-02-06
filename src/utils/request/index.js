@@ -60,7 +60,7 @@ export async function remove(api, data) {
 
   return request.delete(api, opt).catch(error);
 }
-export async function upload(api, data) {
+export async function upload(api, data, headers) {
   let bodyData = undefined;
   if (!(data instanceof FormData)) {
     bodyData = new FormData();
@@ -74,6 +74,7 @@ export async function upload(api, data) {
     baseURL: canEndPoint(api),
     headers: {
       'Content-Type': undefined,
+      ...headers?headers:{}
     }
   };
   setAuthorization(opt);

@@ -25,9 +25,10 @@ declare function post(api: String, data: Object): Promise
  * @export
  * @param {String} api 请求的 api
  * @param {Object} data 请求的 body object
+ * @param {Object} headers 请求头
  * @return {Promise} Promise
  */
-declare function update(api: String, data: Object): Promise
+declare function update(api: String, data: Object, headers: Object): Promise
 
 /**
  * 发起 DELETE 网络请求
