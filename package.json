@@ -8,7 +8,7 @@
     "build": "npm run clean && gulp"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "iostore": "^0.0.6",
     "json-bigint": "^0.3.0",
     "lodash": "^4.17.4",
