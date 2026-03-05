@@ -10,6 +10,7 @@
       "root": ["."],
       "alias": {
         "@": "./src/",
+        "iostore": "iostore"
       }
     }]
   ]

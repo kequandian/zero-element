@@ -1,5 +1,5 @@
-import { createStore, useStore } from 'iostore';
-import models from 'iostore/src/stores';
+import { createStore, useStore } from '../iostore';
+import models from '../iostore';
 import defaultEffects from './defaultEffects';
 import defaultState from './defaultState';
 import devUtils from './devUtils';
